@@ -41,7 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
             }  telemetry.addData("Red:", red);
-            telemetry.addData("Green:", green);\
+            telemetry.addData("Green:", green);
             telemetry.addData("Distance:", distance);
 
 
