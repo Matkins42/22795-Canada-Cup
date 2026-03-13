@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import static java.lang.Math.atan;
+import static java.lang.Math.atan2;
+import static java.lang.Math.round;
+import static java.lang.Math.tan;
+
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -11,38 +17,38 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 @TeleOp(name = "Turret Tracking", group = "Linear Opmode")
 public class TurretTrackingTest extends LinearOpMode {
-
-    private ElapsedTime deltaTime = new ElapsedTime();
+    private MecanumDrive roadRunner;
+    private Pose2d pose;
+    private double xPosition;
+    private double yPosition;
+    private double heading;
+    private double TARGET_X = 0; //Inches
+    private double TARGET_Y = 144; //Inches
     private Limelight3A limeLight;
     private int currentTag;
     private LLResult llData;
-    private double xOffset;
-    private double prevXOffset;
-    private IMU imu;
-    RevHubOrientationOnRobot hubOrientation;
+    private boolean canSeeTag;
+    private double xAngle;
     private DcMotor turret;
-    private double power;
-
-    private double kp = 0.01;
-    private double kd = 0.05;
+    private int TICKS_PER_ROTATION = 538;
+    private double TURRET_GEAR_RATIO = 1.42857143;
+    private int targetTicks;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        roadRunner = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
 
         limeLight = hardwareMap.get(Limelight3A.class, "limeLight");
         limeLight.pipelineSwitch(0); //Tag24
         currentTag = 24;
 
-        imu = hardwareMap.get(IMU.class, "imu");
-        hubOrientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.LEFT);
-        imu.initialize(new IMU.Parameters(hubOrientation));
-
         turret = hardwareMap.get(DcMotor.class, "turret");
-        turret.setDirection(DcMotorSimple.Direction.REVERSE);
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         limeLight.start();
 
@@ -50,25 +56,26 @@ public class TurretTrackingTest extends LinearOpMode {
 
         while(opModeIsActive()){
 
+            //Updates Road Runner
+            roadRunner.updatePoseEstimate();
+            pose = roadRunner.localizer.getPose();
+            xPosition = -1 * pose.position.y;
+            yPosition = pose.position.x;
+            heading = -1 * pose.heading.toDouble();
+
             // Collects Limelight Data
             llData = limeLight.getLatestResult();
-            if(llData != null && llData.isValid()){
-                Pose3D botPose = llData.getBotpose();
-                prevXOffset = xOffset;
-                xOffset = llData.getTx();
-
-                //Sets motor power
-                if (xOffset < -0.5 || xOffset > 0.5) {
-                    power = (kp * xOffset) + (kd * (xOffset - prevXOffset) / deltaTime.seconds()); //PD no integration
-                    turret.setPower(power);
-                }
-
-                deltaTime.reset();
-
+            canSeeTag = llData != null && llData.isValid();
+            if(canSeeTag){
+                xAngle = llData.getTx();
+                targetTicks = turret.getCurrentPosition() - degreesToTicks(xAngle);
             } else{
-                power = 0;
+                targetTicks = degreesToTicks(Math.toDegrees(atan2((TARGET_X - xPosition),(TARGET_Y - yPosition)) - heading));
             }
 
+            turret.setTargetPosition(Math.max(degreesToTicks(-135), Math.min(degreesToTicks(135), targetTicks)));
+            turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            turret.setPower(1);
 
 
             //Sets the target tag
@@ -80,11 +87,27 @@ public class TurretTrackingTest extends LinearOpMode {
                 currentTag = 20;
             }
 
-            telemetry.addData("X Offset", xOffset);
-            telemetry.addData("Motor Power", power);
+            telemetry.addData("Current Angle", ticksToDegrees(turret.getCurrentPosition()));
+            telemetry.addData("Base Angle", Math.toDegrees(atan2((TARGET_X - xPosition),(TARGET_Y - yPosition))));
+            telemetry.addData("Target Ticks", targetTicks);
+            telemetry.addData("Sees Tag", canSeeTag);
             telemetry.addData("Tracked Tag", currentTag);
+            telemetry.addData("X Offset", xAngle);
+            telemetry.addData("X Position", xPosition);
+            telemetry.addData("Y Position", yPosition);
+            telemetry.addData("Heading", heading);
+
             telemetry.update();
 
         }
     }
+
+    private int degreesToTicks(double degrees){
+        return (int) Math.round(((degrees/360) * TICKS_PER_ROTATION) * TURRET_GEAR_RATIO);
+    }
+
+    private double ticksToDegrees(double ticks){
+        return ((ticks/TICKS_PER_ROTATION) * 360) / TURRET_GEAR_RATIO;
+    }
+
 }

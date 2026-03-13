@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.RoadRunner;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.DualNum;
@@ -17,14 +17,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.messages.ThreeDeadWheelInputsMessage;
+import org.firstinspires.ftc.teamcode.RoadRunner.messages.ThreeDeadWheelInputsMessage;
 
 @Config
 public final class ThreeDeadWheelLocalizer implements Localizer {
     public static class Params {
-        public double par0YTicks = 1577.1539332919756; // y position of the first parallel encoder (in tick units)
-        public double par1YTicks = 1184.1663902274681; // y position of the second parallel encoder (in tick units)
-        public double perpXTicks = 2030.1236630647381; // x position of the perpendicular encoder (in tick units)
+        public double par0YTicks = -1396.9755223730808; // y position of the first parallel encoder (in tick units)
+        public double par1YTicks = 1354.864898563304; // y position of the second parallel encoder (in tick units)
+        public double perpXTicks = -1959.7937194149567; // x position of the perpendicular encoder (in tick units)
     }
 
     public static Params PARAMS = new Params();
@@ -100,7 +100,7 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
                         }).times(inPerTick)
                 ),
                 new DualNum<>(new double[] {
-                        (par0PosDelta - par1PosDelta) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
+                        ((par0PosDelta - par1PosDelta) / (PARAMS.par0YTicks - PARAMS.par1YTicks)),
                         (par0PosVel.velocity - par1PosVel.velocity) / (PARAMS.par0YTicks - PARAMS.par1YTicks),
                 })
         );
