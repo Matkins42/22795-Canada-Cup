@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.RoadRunner;
 
 import androidx.annotation.NonNull;
 
@@ -41,10 +41,10 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
-import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
-import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
-import org.firstinspires.ftc.teamcode.messages.PoseMessage;
+import org.firstinspires.ftc.teamcode.RoadRunner.messages.DriveCommandMessage;
+import org.firstinspires.ftc.teamcode.RoadRunner.messages.MecanumCommandMessage;
+import org.firstinspires.ftc.teamcode.RoadRunner.messages.MecanumLocalizerInputsMessage;
+import org.firstinspires.ftc.teamcode.RoadRunner.messages.PoseMessage;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -65,7 +65,7 @@ public final class MecanumDrive {
         // drive model parameters
         public double inPerTick = 0.00296366;
         public double lateralInPerTick = 0.002550989117695444;
-        public double trackWidthTicks = 4966.289415006868;
+        public double trackWidthTicks = 5132.0109195349205;
 
         // feedforward parameters (in tick units)
         public double kS = 0.6193391406014968;
