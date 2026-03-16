@@ -1,26 +1,19 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import static java.lang.Math.atan;
 import static java.lang.Math.atan2;
 import static java.lang.Math.round;
-import static java.lang.Math.tan;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
-@TeleOp(name = "Turret Tracking", group = "Linear Opmode")
-public class TurretTrackingTest extends LinearOpMode {
+@TeleOp(name = "Turret Testing", group = "Linear Opmode")
+public class TurretTesting extends LinearOpMode {
     private MecanumDrive roadRunner;
     private Pose2d pose;
     private double xPosition;

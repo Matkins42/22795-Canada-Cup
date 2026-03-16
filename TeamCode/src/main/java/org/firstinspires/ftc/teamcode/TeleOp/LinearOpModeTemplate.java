@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "Template", group = "Linear Opmode") //Change the name here to what you want to show on the driver station
-public class CodeTemplate extends LinearOpMode {
+public class LinearOpModeTemplate extends LinearOpMode {
 
     //Put initilization of variables here
 
@@ -20,8 +20,6 @@ public class CodeTemplate extends LinearOpMode {
         //Code here run once when start is pressed
 
         while(opModeIsActive()){
-
-            int test = (int) Math.round(38.4);
 
            //Code here loops after start is pressed, this is where most of your code will go
 
