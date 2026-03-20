@@ -10,7 +10,7 @@ public class DrivingSubsystem {
     private DcMotor leftBack;
     private DcMotor rightFront;
     private DcMotor rightBack;
-    private double power;
+    private double power = 0.5;
 
     public DrivingSubsystem(HardwareMap hardwareMap) {
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
