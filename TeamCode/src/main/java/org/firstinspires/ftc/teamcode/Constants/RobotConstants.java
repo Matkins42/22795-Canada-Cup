@@ -14,5 +14,4 @@ public class RobotConstants {
     public static final int TICKS_PER_ROTATION = 538;
     public static final int GEAR_RATIO = 144;
 
-
 }

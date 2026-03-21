@@ -18,9 +18,20 @@ public class TurretSubsystem {
     }
 
     public void setPosition(double targetTicks){
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turret.setTargetPosition(Math.max(degreesToTicks(-135), Math.min(degreesToTicks(135), (int) Math.round(targetTicks))));
         turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turret.setPower(1);
+    }
+
+    public void turnClockwise(double input){
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setPower(input);
+    }
+
+    public void turnCounterClockwise(double input){
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setPower(-input);
     }
 
     public int degreesToTicks(double degrees){
