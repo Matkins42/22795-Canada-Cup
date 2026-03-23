@@ -14,4 +14,12 @@ public class RobotConstants {
     public static final int TICKS_PER_ROTATION = 538;
     public static final int GEAR_RATIO = 144;
 
+    //Intake Constants
+    public static final int OPEN_INTAKE = 1;
+    public static final int CLOSED_INTAKE = 0;
+    public static final double FORWARDS_INTAKE_POWER = 0.5;
+    public static final double BACKWARDS_INTAKE_POWER = -0.5;
+
+
+
 }
