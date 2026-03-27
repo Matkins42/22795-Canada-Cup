@@ -40,5 +40,7 @@ public class TurretSubsystem {
 
     public double ticksToDegrees(double ticks){
         return ((ticks/RobotConstants.TICKS_PER_ROTATION) * 360) / RobotConstants.GEAR_RATIO;
+
+
     }
 }
