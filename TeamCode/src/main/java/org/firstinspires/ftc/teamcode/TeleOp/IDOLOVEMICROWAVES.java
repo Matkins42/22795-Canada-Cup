@@ -16,6 +16,7 @@ public class IDOLOVEMICROWAVES extends LinearOpMode {
     private int green;
     private int blue;
     private double distance;
+
     @Override
 
 
@@ -55,4 +56,5 @@ public class IDOLOVEMICROWAVES extends LinearOpMode {
             telemetry.update();
         }
     }
+}
 

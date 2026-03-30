@@ -10,7 +10,7 @@ public class DrivingSubsystem {
     private DcMotor leftBack;
     private DcMotor rightFront;
     private DcMotor rightBack;
-    private double power = 0.5;
+    private double power = 15;
 
     public DrivingSubsystem(HardwareMap hardwareMap) {
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
@@ -20,8 +20,8 @@ public class DrivingSubsystem {
 
         leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void drive(double forwards, double rotation, double strafe){

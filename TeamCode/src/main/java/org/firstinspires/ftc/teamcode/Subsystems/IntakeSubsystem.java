@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
-import androidx.annotation.NonNull;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,11 +12,12 @@ public class IntakeSubsystem {
     private DcMotor backIntake;
     private Servo stopper;
 
-    public IntakeSubsystem(HardwareMap hardwareMap) {
+    public IntakeSubsystem(HardwareMap hardwareMap){
         //This runs when the subsystem is created, put hardware maps here
-        frontIntake= hardwareMap. get(DcMotor.class, "Intake");
-        backIntake=hardwareMap. get(DcMotor.class, "reverseIntake");
-        stopper =hardwareMap. get(Servo.class, "stopIntake");
+        frontIntake = hardwareMap. get(DcMotor.class, "intakeFront");
+        backIntake = hardwareMap. get(DcMotor.class, "intakeBack");
+        stopper = hardwareMap. get(Servo.class, "stopper");
+        backIntake.setDirection(DcMotor.Direction.REVERSE);
     }
 
     //Write any functions of the subsystem
@@ -36,7 +36,10 @@ public class IntakeSubsystem {
     public void spinForwards(){
         backIntake.setPower(RobotConstants.FORWARDS_INTAKE_POWER);
         frontIntake.setPower(RobotConstants.FORWARDS_INTAKE_POWER);
-
+    }
+    public void stop(){
+        backIntake.setPower(0);
+        frontIntake.setPower(0);
     }
 }
 
