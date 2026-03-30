@@ -10,9 +10,7 @@ import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 public class OuttakeSubsystem {
 
     private DcMotorEx flywheel;
-
     private Servo hood;
-
 
     public OuttakeSubsystem(HardwareMap hardwareMap) {
 

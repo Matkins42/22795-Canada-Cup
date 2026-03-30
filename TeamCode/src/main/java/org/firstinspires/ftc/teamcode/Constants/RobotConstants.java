@@ -16,9 +16,8 @@ public class RobotConstants {
     //Intake Constants
     public static final int OPEN_INTAKE = 1;
     public static final int CLOSED_INTAKE = 0;
-    public static final double FORWARDS_INTAKE_POWER = 0.5;
-    public static final double BACKWARDS_INTAKE_POWER = -0.5;
-
+    public static final double FORWARDS_INTAKE_POWER = 1;
+    public static final double BACKWARDS_INTAKE_POWER = -1;
     // Outtake constants
     public static final double OUTTAKE_POWER = 0.9;
     public static final double OUTTAKE_Velocity = 1000;
