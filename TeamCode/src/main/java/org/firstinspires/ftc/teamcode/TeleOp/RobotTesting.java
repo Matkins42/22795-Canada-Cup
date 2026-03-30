@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
@@ -14,6 +15,8 @@ public class RobotTesting extends LinearOpMode {
     private DcMotorEx flywheel;
     private DcMotor intake;
 
+    private Servo hood;
+
     private TurretSubsystem turret;
     private DrivingSubsystem driveTrain;
 
@@ -22,7 +25,8 @@ public class RobotTesting extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
-        intake = hardwareMap.get(DcMotor.class, "intake");
+        intake = hardwareMap.get(DcMotor.class, "intakeFront");
+        hood = hardwareMap.get(Servo.class, "hood");
 
         turret = new TurretSubsystem(hardwareMap);
         driveTrain = new DrivingSubsystem(hardwareMap);
@@ -51,6 +55,12 @@ public class RobotTesting extends LinearOpMode {
                 flywheel.setPower(1);
             } else if (gamepad1.left_bumper){
                 flywheel.setPower(0);
+            }
+
+            if(gamepad1.dpad_left){
+                hood.setPosition(0);
+            } else if(gamepad1.dpad_right){
+                hood.setPosition(0.3);
             }
         }
     }

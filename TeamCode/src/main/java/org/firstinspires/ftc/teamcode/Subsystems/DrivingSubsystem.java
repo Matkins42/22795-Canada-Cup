@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DrivingSubsystem {
@@ -18,17 +17,17 @@ public class DrivingSubsystem {
         leftBack = hardwareMap.get(DcMotor.class, "leftBack");
         rightBack = hardwareMap.get(DcMotor.class, "rightBack");
 
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        leftBack.setDirection(DcMotor.Direction.FORWARD);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void drive(double forwards, double rotation, double strafe){
-        leftFront.setPower((forwards + rotation + strafe) * power);
-        rightFront.setPower((forwards - rotation - strafe) * power);
-        leftBack.setPower((forwards + rotation - strafe) * power);
-        rightBack.setPower((forwards - rotation + strafe) * power);
+        leftFront.setPower((forwards - rotation - strafe) * power);
+        rightFront.setPower((forwards + rotation + strafe) * power);
+        leftBack.setPower((forwards - rotation + strafe) * power);
+        rightBack.setPower((forwards + rotation - strafe) * power);
     }
 
     public void setPower(double value){
