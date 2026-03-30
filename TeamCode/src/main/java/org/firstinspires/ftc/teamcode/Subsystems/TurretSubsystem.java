@@ -9,8 +9,10 @@ public class TurretSubsystem {
 
     public TurretSubsystem(HardwareMap hardwareMap) {
         turret = hardwareMap.get(DcMotor.class, "turret");
+        turret.setDirection(DcMotor.Direction.REVERSE);
         turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public double getPosition(){
@@ -18,10 +20,9 @@ public class TurretSubsystem {
     }
 
     public void setPosition(double targetTicks){
-        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         turret.setTargetPosition(Math.max(degreesToTicks(-135), Math.min(degreesToTicks(135), (int) Math.round(targetTicks))));
-        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        turret.setPower(1);
+        //turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        turret.setPower(RobotConstants.ROTATION_POWER);
     }
 
     public void turnClockwise(double input){
