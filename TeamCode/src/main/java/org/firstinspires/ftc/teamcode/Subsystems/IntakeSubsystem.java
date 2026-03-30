@@ -20,8 +20,6 @@ public class IntakeSubsystem {
         backIntake.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    //Write any functions of the subsystem
-
     public void StopperClosed(){
         stopper.setPosition(RobotConstants.CLOSED_INTAKE);
     }
