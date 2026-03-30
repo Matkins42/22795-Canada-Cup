@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimeLightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.RoadRunnerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
+import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
 @TeleOp(name = "TurretTracking", group = "Linear Opmode")
 public class TurretTracking extends LinearOpMode {
@@ -17,8 +18,8 @@ public class TurretTracking extends LinearOpMode {
     private RoadRunnerSubsystem roadRunner;
     private TurretSubsystem turret;
     private DrivingSubsystem driveTrain;
-    private double targetTicks;
-    private String target;
+    private double targetTicks = 0;
+    private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,23 +39,30 @@ public class TurretTracking extends LinearOpMode {
 
            //Sets the target
            if(gamepad1.a){
-               target = "blue";
-               limeLight.switchPipeline(0);
+               target = RobotConstants.BLUE_GOAL;
+               limeLight.switchPipeline(target.PIPELINE);
            } else if (gamepad1.y){
-               target = "red";
-               limeLight.switchPipeline(1);
+               target = RobotConstants.RED_GOAL;
+               limeLight.switchPipeline(target.PIPELINE);
            }
 
-            driveTrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
+           //driveTrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
 
            //Tracks Tag
            if(limeLight.seesTag()){
-               targetTicks = turret.getPosition() - turret.degreesToTicks(limeLight.getXAngle());
+               targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
+               telemetry.addData("Target Angle", limeLight.getXAngle());
            } else{
-               targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
+               targetTicks = turret.getPosition();
+               //targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
            }
 
            turret.setPosition(targetTicks);
+
+           telemetry.addData("Target Ticks", targetTicks);
+           telemetry.addData("Sees Tag", limeLight.seesTag());
+           telemetry.addData("Distance", limeLight.getDistance());
+           telemetry.update();
         }
     }
 }

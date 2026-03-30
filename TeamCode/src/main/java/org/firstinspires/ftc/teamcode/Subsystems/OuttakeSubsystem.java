@@ -20,18 +20,17 @@ public class OuttakeSubsystem {
         hood = hardwareMap.get(Servo.class, "hood");
         flywheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //This runs when the subsystem is created, put hardware maps here
     }
 
     public void setOuttakeVeloicty(){
         flywheel.setVelocity(RobotConstants.OUTTAKE_Velocity);
 
     }
-    public void startOuttake(double setPower){
-            flywheel.setPower(RobotConstants.OUTTAKE_POWER);
+    public void startFlywheel(){
+        flywheel.setPower(RobotConstants.OUTTAKE_POWER);
     }
 
-    public void stopOuttake(int setPower){
+    public void stopFlywheel(){
         flywheel.setPower(0);
     }
 
@@ -39,8 +38,8 @@ public class OuttakeSubsystem {
        hood.setPosition(hoodPosition);
     }
 
-    public void setPostion(double angle){
-        hood.setPosition (Math.max(RobotConstants.EXTENDED_SERVO_POSITION, Math.min(0,(angle - RobotConstants.BOTTOM_ANGLE) / (RobotConstants.ANGLE_DIFFERENCE / RobotConstants.EXTENDED_SERVO_POSITION))));
+    public void setHoodAngle(double angle){
+        hood.setPosition(Math.max(0, Math.min(RobotConstants.EXTENDED_SERVO_POSITION,(angle - RobotConstants.BOTTOM_ANGLE) / ((RobotConstants.TOP_ANGLE - RobotConstants.BOTTOM_ANGLE) / RobotConstants.EXTENDED_SERVO_POSITION))));
     }
 
 }

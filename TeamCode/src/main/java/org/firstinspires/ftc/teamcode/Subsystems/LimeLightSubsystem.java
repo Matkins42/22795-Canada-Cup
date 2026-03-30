@@ -39,4 +39,8 @@ public class LimeLightSubsystem {
         LLResult data = limeLight.getLatestResult();
         return data != null && data.isValid();
     }
+
+    public double getDistance(){
+        return limeLight.getLatestResult().getBotpose().getPosition().z;
+    }
 }

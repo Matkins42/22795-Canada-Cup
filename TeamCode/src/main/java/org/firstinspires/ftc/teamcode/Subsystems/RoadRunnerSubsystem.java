@@ -22,14 +22,8 @@ public class RoadRunnerSubsystem {
         pose = roadRunner.localizer.getPose();
     }
 
-    public double getEstimatedAngle(String target){
-        if(target == "blue"){
-            return Math.toDegrees(atan2((RobotConstants.BLUE_GOAL_X - pose.position.x),(RobotConstants.BLUE_GOAL_Y - pose.position.y)) - pose.heading.toDouble());
-        } else if(target == "red"){
-            return Math.toDegrees(atan2((RobotConstants.RED_GOAL_X - pose.position.x),(RobotConstants.RED_GOAL_Y - pose.position.y)) - pose.heading.toDouble());
-        } else{
-            return 0;
-        }
+    public double getEstimatedAngle(RobotConstants.Target target){
+        return Math.toDegrees(atan2((target.GOAL_X - pose.position.x),(target.GOAL_Y - pose.position.y)) - pose.heading.toDouble());
     }
 
 
