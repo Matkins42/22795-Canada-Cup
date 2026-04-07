@@ -7,16 +7,15 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 @TeleOp(name = "Robot Testing", group = "Linear Opmode") //Change the name here to what you want to show on the driver station
 public class RobotTesting extends LinearOpMode {
 
     private DcMotorEx flywheel;
-    private DcMotor intake;
-
     private Servo hood;
-
+    private IntakeSubsystem intake;
     private TurretSubsystem turret;
     private DrivingSubsystem driveTrain;
 
@@ -25,9 +24,9 @@ public class RobotTesting extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
-        intake = hardwareMap.get(DcMotor.class, "intakeFront");
         hood = hardwareMap.get(Servo.class, "hood");
 
+        intake = new IntakeSubsystem(hardwareMap);
         turret = new TurretSubsystem(hardwareMap);
         driveTrain = new DrivingSubsystem(hardwareMap);
 
@@ -44,11 +43,11 @@ public class RobotTesting extends LinearOpMode {
             }
 
             if (gamepad1.a){
-                intake.setPower(0);
+                intake.stop();
             } else if (gamepad1.x){
-                intake.setPower(0.2);
+                intake.spinForwards();
             } else if (gamepad1.b){
-                intake.setPower(-0.2);
+                intake.spinBackwards();
             }
 
             if (gamepad1.right_bumper){

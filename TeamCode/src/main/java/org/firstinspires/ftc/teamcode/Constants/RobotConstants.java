@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Constants;
 
+import com.acmerobotics.dashboard.config.Config;
+
+@Config
 public class RobotConstants {
 
     //Put any constants (unchanging variables) here
@@ -9,15 +12,19 @@ public class RobotConstants {
     public static final Target RED_GOAL = new Target(1, 144, 144);
 
     //Turret constants
-    public static final double ROTATION_POWER = 1;
-    public static final int TICKS_PER_ROTATION = 538;
-    public static final double GEAR_RATIO = (double) 51/42; // 17/14
+    public static  double ROTATION_POWER = 0.2;
+    public static final int TICKS_PER_ROTATION = 146;
+    public static final double GEAR_RATIO = (double) 17/14;
+    public static double KP = 0.015;
+    public static double KI = 0.00001;
+    public static double KD = 0.125;
+    public static double DEADBAND = 3;
 
     //Intake Constants
     public static final int OPEN_INTAKE = 1;
     public static final int CLOSED_INTAKE = 0;
-    public static final double FORWARDS_INTAKE_POWER = 0.5;
-    public static final double BACKWARDS_INTAKE_POWER = -0.5;
+    public static final double FORWARDS_INTAKE_POWER = 1;
+    public static final double BACKWARDS_INTAKE_POWER = -1;
 
     // Outtake constants
     public static final double OUTTAKE_POWER = 0.9;

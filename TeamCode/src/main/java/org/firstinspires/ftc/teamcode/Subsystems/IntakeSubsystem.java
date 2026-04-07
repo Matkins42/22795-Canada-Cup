@@ -15,9 +15,9 @@ public class IntakeSubsystem {
 
     public IntakeSubsystem(HardwareMap hardwareMap) {
         //This runs when the subsystem is created, put hardware maps here
-        frontIntake= hardwareMap. get(DcMotor.class, "Intake");
-        backIntake=hardwareMap. get(DcMotor.class, "reverseIntake");
-        stopper =hardwareMap. get(Servo.class, "stopIntake");
+        frontIntake= hardwareMap. get(DcMotor.class, "intakeFront");
+        backIntake=hardwareMap. get(DcMotor.class, "intakeBack");
+        stopper =hardwareMap. get(Servo.class, "stopper");
     }
 
     //Write any functions of the subsystem
@@ -29,6 +29,10 @@ public class IntakeSubsystem {
         stopper.setPosition(RobotConstants.OPEN_INTAKE);
     }
 
+    public void stop(){
+        backIntake.setPower(0);
+        frontIntake.setPower(0);
+    }
     public void spinBackwards(){
         backIntake.setPower(RobotConstants.BACKWARDS_INTAKE_POWER);
         frontIntake.setPower(RobotConstants.BACKWARDS_INTAKE_POWER);
