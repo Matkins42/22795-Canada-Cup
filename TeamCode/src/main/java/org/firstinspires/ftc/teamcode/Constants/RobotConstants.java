@@ -26,7 +26,7 @@ public class RobotConstants {
     public static final double FORWARDS_INTAKE_POWER = 1;
     public static final double BACKWARDS_INTAKE_POWER = -1;
 
-    // Outtake constants
+    //Outtake constants
     public static final double OUTTAKE_POWER = 0.9;
     public static final double OUTTAKE_Velocity = 1000;
     public static final double BOTTOM_ANGLE = 31.22;
