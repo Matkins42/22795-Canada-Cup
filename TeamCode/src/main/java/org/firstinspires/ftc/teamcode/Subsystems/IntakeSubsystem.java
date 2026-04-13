@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,13 +15,13 @@ public class IntakeSubsystem {
     private Servo stopper;
 
     public IntakeSubsystem(HardwareMap hardwareMap) {
-        //This runs when the subsystem is created, put hardware maps here
-        frontIntake= hardwareMap. get(DcMotor.class, "intakeFront");
-        backIntake=hardwareMap. get(DcMotor.class, "intakeBack");
-        stopper =hardwareMap. get(Servo.class, "stopper");
-    }
+        frontIntake = hardwareMap. get(DcMotor.class, "intakeFront");
+        backIntake = hardwareMap. get(DcMotor.class, "intakeBack");
+        stopper = hardwareMap. get(Servo.class, "stopper");
 
-    //Write any functions of the subsystem
+        frontIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+    }
 
     public void StopperClosed(){
         stopper.setPosition(RobotConstants.CLOSED_INTAKE);
@@ -33,14 +34,17 @@ public class IntakeSubsystem {
         backIntake.setPower(0);
         frontIntake.setPower(0);
     }
-    public void spinBackwards(){
-        backIntake.setPower(RobotConstants.BACKWARDS_INTAKE_POWER);
+    public void expel(){
         frontIntake.setPower(RobotConstants.BACKWARDS_INTAKE_POWER);
+        backIntake.setPower(RobotConstants.BACKWARDS_INTAKE_POWER);
     }
-    public void spinForwards(){
-        backIntake.setPower(RobotConstants.FORWARDS_INTAKE_POWER);
+    public void collect(){
         frontIntake.setPower(RobotConstants.FORWARDS_INTAKE_POWER);
-
+        backIntake.setPower(RobotConstants.BACKWARDS_INTAKE_POWER);
+    }
+    public void shoot(){
+        frontIntake.setPower(RobotConstants.FORWARDS_INTAKE_POWER);
+        backIntake.setPower(RobotConstants.FORWARDS_INTAKE_POWER);
     }
 }
 

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
 public class OuttakeSubsystem {
 
-    private DcMotorEx flywheel;
+    public DcMotorEx flywheel;
 
     private Servo hood;
 
@@ -22,9 +22,12 @@ public class OuttakeSubsystem {
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void setOuttakeVeloicty(){
+    public void setOuttakeVelocity(){
         flywheel.setVelocity(RobotConstants.OUTTAKE_Velocity);
+    }
 
+    public double getOuttakeVelocity(){
+        return flywheel.getVelocity();
     }
     public void startFlywheel(){
         flywheel.setPower(RobotConstants.OUTTAKE_POWER);

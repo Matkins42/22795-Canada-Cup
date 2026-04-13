@@ -4,6 +4,8 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
+
 public class LimeLightSubsystem {
 
     private Limelight3A limeLight;
@@ -26,6 +28,10 @@ public class LimeLightSubsystem {
         return limeLight.getLatestResult().getTx();
     }
 
+    public double getYAngle(){
+        return limeLight.getLatestResult().getTy();
+    }
+
     public void switchPipeline(int pipeline){
         limeLight.pipelineSwitch(pipeline);
         currentPipeline = pipeline;
@@ -40,7 +46,11 @@ public class LimeLightSubsystem {
         return data != null && data.isValid();
     }
 
-    public double getDistance(){
-        return limeLight.getLatestResult().getBotpose().getPosition().z;
+    public double getDistancePose(){
+        return limeLight.getLatestResult().getFiducialResults().get(0).getTargetPoseCameraSpace().getPosition().z;
+    }
+
+    public double getDistanceTrig(){
+        return (RobotConstants.TAG_HEIGHT - RobotConstants.LL_HEIGHT)/(Math.tan(Math.toRadians(limeLight.getLatestResult().getTy())));
     }
 }

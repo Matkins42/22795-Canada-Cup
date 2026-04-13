@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Practise.Felicity;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+@Disabled
 @TeleOp(name = "frog", group = "Linear Opmode")
 public class frog extends LinearOpMode {
     private DcMotor Intake;

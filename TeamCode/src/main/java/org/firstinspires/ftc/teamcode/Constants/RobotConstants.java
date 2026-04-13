@@ -10,15 +10,17 @@ public class RobotConstants {
     //Target positions
     public static final Target BLUE_GOAL = new Target(0, 0, 144);
     public static final Target RED_GOAL = new Target(1, 144, 144);
+    public static final double TAG_HEIGHT = 757;
 
     //Turret constants
-    public static  double ROTATION_POWER = 0.2;
+    public static double ROTATION_POWER = 0.2;
     public static final int TICKS_PER_ROTATION = 146;
     public static final double GEAR_RATIO = (double) 17/14;
     public static double KP = 0.015;
     public static double KI = 0.00001;
     public static double KD = 0.125;
     public static double DEADBAND = 3;
+    public static double LL_HEIGHT = 315;
 
     //Intake Constants
     public static final int OPEN_INTAKE = 1;

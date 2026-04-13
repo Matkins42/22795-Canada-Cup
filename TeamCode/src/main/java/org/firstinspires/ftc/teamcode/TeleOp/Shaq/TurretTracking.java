@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
-
-import static java.lang.Math.atan2;
+package org.firstinspires.ftc.teamcode.TeleOp.Shaq;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -19,8 +17,6 @@ public class TurretTracking extends LinearOpMode {
     private TurretSubsystem turret;
     private DrivingSubsystem driveTrain;
     private double targetTicks = 0;
-    private double testingAngle = 0;
-    private String mode = "default";
     private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
 
     @Override
@@ -40,43 +36,33 @@ public class TurretTracking extends LinearOpMode {
            roadRunner.update();
 
            //Sets the target
-//           if(gamepad1.a){
-//               target = RobotConstants.BLUE_GOAL;
-//               limeLight.switchPipeline(target.PIPELINE);
-//           } else if (gamepad1.y){
-//               target = RobotConstants.RED_GOAL;
-//               limeLight.switchPipeline(target.PIPELINE);
-//           }
+           if(gamepad1.a){
+               target = RobotConstants.BLUE_GOAL;
+               limeLight.switchPipeline(target.PIPELINE);
+           } else if (gamepad1.y){
+               target = RobotConstants.RED_GOAL;
+               limeLight.switchPipeline(target.PIPELINE);
+           }
 
-           //driveTrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
+           driveTrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
 
            //Tracks Tag
-//           if(limeLight.seesTag()){
-//               targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
-//               telemetry.addData("Target Angle", limeLight.getXAngle());
-//           } else{
-//               targetTicks = turret.getPosition();
-//               //targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
-//           }
+           if(limeLight.seesTag()){
+               targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
+               telemetry.addData("Horizontal Angle", limeLight.getXAngle());
+               telemetry.addData("Vertical Angle", limeLight.getYAngle());
+               telemetry.addData("TrigDistance", limeLight.getDistanceTrig());
+               telemetry.addData("PoseDistance", limeLight.getDistancePose());
+           } else{
+               targetTicks = turret.getPosition();
+               //targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
+           }
 
-           //turret.setPosition(targetTicks);
+           turret.turnTo(targetTicks);
 
-            if (gamepad1.a){
-                testingAngle = 45;
-            } else if (gamepad1.b){
-                testingAngle = -45;
-            }
-
-
-            turret.turnTo(turret.degreesToTicks(testingAngle));
-
-
-           telemetry.addData("Target Angle", testingAngle);
-           telemetry.addData("Target Ticks", turret.degreesToTicks(testingAngle));
-           telemetry.addData("Mode", mode);
+           telemetry.addData("Target Ticks", targetTicks);
            telemetry.addData("Position", turret.getPosition());
            telemetry.addData("Sees Tag", limeLight.seesTag());
-           telemetry.addData("Distance", limeLight.getDistance());
            telemetry.update();
         }
     }
