@@ -16,6 +16,7 @@ public class TurretSubsystem {
         turret = hardwareMap.get(DcMotor.class, "turret");
         turret.setDirection(DcMotor.Direction.REVERSE);
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public double getPosition(){

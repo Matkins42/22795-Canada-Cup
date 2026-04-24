@@ -23,7 +23,7 @@ public class OuttakeSubsystem {
     }
 
     public void setOuttakeVelocity(){
-        flywheel.setVelocity(RobotConstants.OUTTAKE_Velocity);
+        flywheel.setVelocity(RobotConstants.OUTTAKE_VELOCITY.MAX);
     }
 
     public double getOuttakeVelocity(){
@@ -42,7 +42,7 @@ public class OuttakeSubsystem {
     }
 
     public void setHoodAngle(double angle){
-        hood.setPosition(Math.max(0, Math.min(RobotConstants.EXTENDED_SERVO_POSITION,(angle - RobotConstants.BOTTOM_ANGLE) / ((RobotConstants.TOP_ANGLE - RobotConstants.BOTTOM_ANGLE) / RobotConstants.EXTENDED_SERVO_POSITION))));
+        hood.setPosition(Math.max(0, Math.min(RobotConstants.EXTENDED_SERVO_POSITION,(angle - RobotConstants.HOOD_ANGLE.MIN) / ((RobotConstants.HOOD_ANGLE.MAX - RobotConstants.HOOD_ANGLE.MIN) / RobotConstants.EXTENDED_SERVO_POSITION))));
     }
 
 }

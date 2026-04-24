@@ -7,12 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "Template", group = "Linear Opmode") //Change the name here to what you want to show on the driver station
 public class LinearOpModeTemplate extends LinearOpMode {
 
-    //Put initilization of variables here
+    //Put initialization of variables here
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        // Code here runs on initilizatiom
+        // Code here runs on initialization
 
         //Insert hardware maps, directions and any other set up code here
 

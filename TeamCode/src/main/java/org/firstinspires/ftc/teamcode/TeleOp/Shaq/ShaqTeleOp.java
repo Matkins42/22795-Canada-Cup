@@ -5,16 +5,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 @TeleOp(name = "Shaq TeleOp", group = "Linear Opmode")
 public class ShaqTeleOp extends LinearOpMode {
 
-    private DcMotorEx flywheel;
-    private Servo hood;
+
     private IntakeSubsystem intake;
+    private OuttakeSubsystem outtake;
     private TurretSubsystem turret;
     private DrivingSubsystem driveTrain;
 
@@ -22,10 +24,8 @@ public class ShaqTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
-        hood = hardwareMap.get(Servo.class, "hood");
-
         intake = new IntakeSubsystem(hardwareMap);
+        outtake = new OuttakeSubsystem(hardwareMap);
         turret = new TurretSubsystem(hardwareMap);
         driveTrain = new DrivingSubsystem(hardwareMap);
 
@@ -52,16 +52,31 @@ public class ShaqTeleOp extends LinearOpMode {
             }
 
             if (gamepad1.right_bumper){
-                flywheel.setPower(1);
+                outtake.startFlywheel();
             } else if (gamepad1.left_bumper){
-                flywheel.setPower(0);
+                outtake.stopFlywheel();
             }
 
             if(gamepad1.dpad_left){
-                hood.setPosition(0);
+                outtake.setHoodAngle(RobotConstants.BOTTOM_ANGLE);
+            } else if(gamepad1.dpad_up){
+                outtake.setHoodAngle(38);
             } else if(gamepad1.dpad_right){
-                hood.setPosition(0.3);
+                outtake.setHoodAngle(RobotConstants.TOP_ANGLE);
             }
+
+            if(gamepad2.a){
+                outtake.flywheel.setPower(0.25);
+            } else if(gamepad2.b){
+                outtake.flywheel.setPower(0.5);
+            } else if(gamepad2.y){
+                outtake.flywheel.setPower(0.75);
+            } else if(gamepad2.x){
+                outtake.flywheel.setPower(1);
+            }
+
+            telemetry.addData("Speed", outtake.getOuttakeVelocity());
+            telemetry.update();
         }
     }
 }
