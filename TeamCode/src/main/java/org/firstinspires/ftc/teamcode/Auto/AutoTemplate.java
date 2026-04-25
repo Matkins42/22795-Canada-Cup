@@ -59,7 +59,6 @@ public class AutoTemplate extends LinearOpMode {
 
                     .build();
 
-
         // Code here runs on initialization
 
         waitForStart();
