@@ -17,7 +17,7 @@ public class RobotConstants {
     //Turret constants
     public static double ROTATION_POWER = 0.2;
     public static final int TICKS_PER_ROTATION = 146;
-    public static final double GEAR_RATIO = (double) 17 / 14;
+    public static final double GEAR_RATIO = (double) 51 / 24;
     public static double KP = 0.05;
     public static double KI = 0.0001;
     public static double KD = 0.04;

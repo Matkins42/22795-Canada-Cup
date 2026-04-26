@@ -18,7 +18,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 
 @Disabled //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
@@ -26,20 +31,31 @@ import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 public class AutoTemplate extends LinearOpMode {
 
     //Put initialization of variables here (e.g subsystems)
-
-    //Create actions here
-    public class ExampleAction implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            //Put action code here
-            return false; //False means action runs once, true loops the action
-        }
-    }
+    private IntakeSubsystem intake;
+    private OuttakeSubsystem outtake;
+    private TurretSubsystem turret;
+    private TrackingSubsystem tracking;
 
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+
+        intake = new IntakeSubsystem(hardwareMap);
+        outtake = new OuttakeSubsystem(hardwareMap);
+        turret = new TurretSubsystem(hardwareMap);
+        tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+
+        //Create actions here
+        Action exampleAction = packet -> {
+            //Put action code here
+            return false; //False means action runs once, true loops the action
+        };
+
+        Action trackTag = packet -> {
+            tracking.update();
+            return true;
+        };
 
         //Create trajectories here
         Action exampleTrajectory = drive.actionBuilder(initialPose)
@@ -66,16 +82,13 @@ public class AutoTemplate extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(
-                new ParallelAction(
-                    //Put actions that run independant of movement, e.g sensing and tracking
-                    new SequentialAction(
-                        //Put ordered actions here, e.g movement, intaking, arm movement
-                    )
+                new ParallelAction( //Put actions that run independant of movement, e.g sensing and tracking
+                        trackTag,
+                        new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
+                                exampleTrajectory,
+                                exampleAction
+                        )
                 )
         );
-
-
-
-
     }
 }

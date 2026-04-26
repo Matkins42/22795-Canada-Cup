@@ -26,7 +26,6 @@ public class RoadRunnerSubsystem {
         return Math.toDegrees(atan2((target.GOAL_X - pose.position.x),(target.GOAL_Y - pose.position.y)) - pose.heading.toDouble());
     }
 
-
     public double getY(){
         return -1 * pose.position.y;
     }
@@ -34,8 +33,10 @@ public class RoadRunnerSubsystem {
     public double getX(){
         return pose.position.x;
     }
-
     public double getHeading(){
         return -1 * pose.heading.toDouble();
+    }
+    public double getDistance(){
+        return Math.sqrt((getX() * getX()) + (getY() * getY()));
     }
 }
