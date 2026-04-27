@@ -64,17 +64,17 @@ public class ShaqTeleOp extends LinearOpMode {
             }
 
             //Manual turret turning
-            turret.turnClockwise(gamepad2.right_trigger - gamepad2.left_trigger);
+            turret.turnClockwise(gamepad2.left_stick_x);
 
             //Intake
-            if (gamepad2.a){
-                intake.stop();
-            } else if (gamepad2.x){
-                intake.collect();
-            } else if (gamepad2.b){
-                intake.expel();
-            } else if (gamepad2.y) {
+            if (gamepad2.a) {
                 intake.shoot();
+            } else if (gamepad2.left_trigger > 0){
+                intake.collect();
+            } else if (gamepad2.right_trigger > 0){
+                intake.expel();
+            } else{
+                intake.stop();
             }
 
             //Outtake
@@ -85,15 +85,11 @@ public class ShaqTeleOp extends LinearOpMode {
             }
 
             //Hood control
-//            if(gamepad2.dpad_left){
-//                outtake.setHoodAngle(RobotConstants.BOTTOM_ANGLE);
-//            } else if(gamepad2.dpad_up){
-//                outtake.setHoodAngle(38);
-//            } else if(gamepad2.dpad_right){
-//                outtake.setHoodAngle(RobotConstants.TOP_ANGLE);
-//            }
+            if(gamepad2.right_stick_button){
+                outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(-1, 1, -gamepad2.right_stick_y));
+            }
 
-
+            //Vibrates when ready to shoot
             if(tracking.trackingTag() && turret.isAiming() && outtake.reachedSpeed()){
                 feedback.rumble(gamepad2);
             }

@@ -8,8 +8,8 @@ public class RobotConstants {
     //Put any constants (unchanging variables) here
 
     //Target positions
-    public static final Target BLUE_GOAL = new Target(0, 0, 144);
-    public static final Target RED_GOAL = new Target(1, 144, 144);
+    public static final Target BLUE_GOAL = new Target(1, 0, 144);
+    public static final Target RED_GOAL = new Target(0, 144, 144);
     public static final double TAG_HEIGHT = 757;
     public static final double CLOSE_LIMIT = 1500; //mm
     public static final double FAR_LIMIT = 3000; //mm

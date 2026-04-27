@@ -12,22 +12,12 @@ import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 public class IntakeSubsystem {
     private DcMotor frontIntake;
     private DcMotor backIntake;
-    private Servo stopper;
 
     public IntakeSubsystem(HardwareMap hardwareMap) {
         frontIntake = hardwareMap. get(DcMotor.class, "intakeFront");
         backIntake = hardwareMap. get(DcMotor.class, "intakeBack");
-        stopper = hardwareMap. get(Servo.class, "stopper");
 
         frontIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-
-    }
-
-    public void StopperClosed(){
-        stopper.setPosition(RobotConstants.CLOSED_INTAKE);
-    }
-    public void StopperOpen(){
-        stopper.setPosition(RobotConstants.OPEN_INTAKE);
     }
 
     public void stop(){
