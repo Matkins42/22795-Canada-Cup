@@ -51,6 +51,6 @@ public class LimeLightSubsystem {
     }
 
     public double getDistanceTrig(){
-        return (RobotConstants.TAG_HEIGHT - RobotConstants.LL_HEIGHT)/(Math.tan(Math.toRadians(limeLight.getLatestResult().getTy())));
+        return (RobotConstants.TAG_HEIGHT - RobotConstants.LL_HEIGHT)/(Math.tan(Math.toRadians(limeLight.getLatestResult().getTy() + RobotConstants.LL_ANGLE)));
     }
 }

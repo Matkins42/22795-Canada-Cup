@@ -16,14 +16,14 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-//        String imagePath = "C:/MeepMeep/decode.png";
-//
-//        Image decodeField;
-//        try {
-//            decodeField = ImageIO.read(new File(imagePath));
-//        } catch (IOException e) {
-//            throw new RuntimeException("Could not load DECODE field image from " + imagePath, e);
-//        }
+        String imagePath = "C:/MeepMeep/decode.png";
+
+        Image decodeField;
+        try {
+            decodeField = ImageIO.read(new File(imagePath));
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load DECODE field image from " + imagePath, e);
+        }
 
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -41,7 +41,7 @@ public class MeepMeepTesting {
                         .build());
 
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_INTOTHEDEEP_JUICE_DARK)
+        meepMeep.setBackground(decodeField)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
