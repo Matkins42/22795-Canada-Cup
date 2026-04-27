@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 @TeleOp(name = "Shaq TeleOp", group = "Linear Opmode")
@@ -19,6 +20,7 @@ public class ShaqTeleOp extends LinearOpMode {
     private OuttakeSubsystem outtake;
     private TurretSubsystem turret;
     private DrivingSubsystem driveTrain;
+    private TrackingSubsystem tracking;
 
 
     @Override
@@ -29,9 +31,13 @@ public class ShaqTeleOp extends LinearOpMode {
         turret = new TurretSubsystem(hardwareMap);
         driveTrain = new DrivingSubsystem(hardwareMap);
 
+        tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.BLUE_GOAL);
+
         waitForStart();
 
         while(opModeIsActive()){
+
+            //tracking.update();
 
             driveTrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
 

@@ -45,8 +45,9 @@ public class TrackingSubsystem {
             targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
             distance = limeLight.getDistanceTrig();
         } else{
-            targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
-            distance = roadRunner.getDistance();
+            targetTicks = turret.getPosition();
+//            targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
+//            distance = roadRunner.getDistance();
         }
 
         turret.turnTo(targetTicks);

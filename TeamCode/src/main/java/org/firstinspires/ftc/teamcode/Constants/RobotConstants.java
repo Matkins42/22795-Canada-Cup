@@ -23,6 +23,7 @@ public class RobotConstants {
     public static double KD = 0.04;
     public static double DEADBAND = 3;
     public static double LL_HEIGHT = 315;
+    public static final double LL_ANGLE = 26;
 
     //Intake constants
     public static final int OPEN_INTAKE = 1;
