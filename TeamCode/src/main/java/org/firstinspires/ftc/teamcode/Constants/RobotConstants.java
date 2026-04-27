@@ -18,9 +18,9 @@ public class RobotConstants {
     public static double ROTATION_POWER = 0.2;
     public static final int TICKS_PER_ROTATION = 146;
     public static final double GEAR_RATIO = (double) 51 / 24;
-    public static double KP = 0.05;
-    public static double KI = 0.0001;
-    public static double KD = 0.04;
+    public static double KP = 0.023;
+    public static double KI = 0.00001;
+    public static double KD = 0.095;
     public static double DEADBAND = 3;
     public static double LL_HEIGHT = 315;
     public static final double LL_ANGLE = 26;
