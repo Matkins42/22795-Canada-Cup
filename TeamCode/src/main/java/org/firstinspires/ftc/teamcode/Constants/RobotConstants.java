@@ -18,9 +18,9 @@ public class RobotConstants {
     public static double ROTATION_POWER = 0.2;
     public static final int TICKS_PER_ROTATION = 146;
     public static final double GEAR_RATIO = (double) 51 / 24;
-    public static double KP = 0.023;
-    public static double KI = 0.00001;
-    public static double KD = 0.095;
+    public static double KP = 0.027;
+    public static double KI = 0.0005;
+    public static double KD = 0.21;
     public static double DEADBAND = 3;
     public static double LL_HEIGHT = 315;
     public static final double LL_ANGLE = 26;
@@ -33,11 +33,17 @@ public class RobotConstants {
 
     //Outtake constants
     public static final double OUTTAKE_POWER = 0.9;
-    public static final Range OUTTAKE_VELOCITY = new Range(100, 1000);
+    public static final Range OUTTAKE_VELOCITY = new Range(1000, 2000); //Absolute max velocity at full power is 2380 (ticks/s)
     public static final Range HOOD_ANGLE = new Range(31.22, 44.07);
     public static final double BOTTOM_ANGLE = 31.22;
     public static final double TOP_ANGLE = 44.07;
     public static final double EXTENDED_SERVO_POSITION = 0.3;
+
+    //Feedback Constants
+    public static final int  RUMBLE_DURATION = 1;
+    public static final double[] RED = {255, 0, 0};
+    public static final double[] YELLOW = {255, 255, 0};
+    public static final double[] GREEN = {0, 255, 0};
 
     public static class Target {
         public final int PIPELINE;

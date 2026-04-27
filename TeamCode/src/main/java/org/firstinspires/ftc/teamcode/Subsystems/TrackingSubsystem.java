@@ -32,33 +32,35 @@ public class TrackingSubsystem {
         return distance;
     }
 
-    public void update(){
-        track();
-        adjustOuttake();
-    }
-
-    public void track(){
+    public void fullTracking(){
         roadRunner.update();
 
-        //Tracks tag
+        if(limeLight.seesTag()){
+            targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
+            distance = limeLight.getDistanceTrig();
+        } else{
+            targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
+            distance = roadRunner.getDistance();
+        }
+
+        turret.turnTo(targetTicks);
+    }
+
+    public void llTracking(){
         if(limeLight.seesTag()){
             targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
             distance = limeLight.getDistanceTrig();
         } else{
             targetTicks = turret.getPosition();
-//            targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
-//            distance = roadRunner.getDistance();
         }
 
         turret.turnTo(targetTicks);
     }
 
     public void adjustOuttake(){
-        //Adjusts hood based on distance
         if (limeLight.getYAngle() > 5) {
             outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
+            outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
         }
-        //Put speed change
     }
-
 }

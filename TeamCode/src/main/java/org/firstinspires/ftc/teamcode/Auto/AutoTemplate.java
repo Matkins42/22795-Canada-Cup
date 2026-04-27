@@ -53,7 +53,7 @@ public class AutoTemplate extends LinearOpMode {
         };
 
         Action trackTag = packet -> {
-            tracking.update();
+            tracking.fullTracking();
             return true;
         };
 

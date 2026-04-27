@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.FeedbackSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
@@ -21,7 +22,9 @@ public class ShaqTeleOp extends LinearOpMode {
     private TurretSubsystem turret;
     private DrivingSubsystem driveTrain;
     private TrackingSubsystem tracking;
+    private FeedbackSubsystem feedback;
 
+    private String trackingMode = "ll";
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,52 +40,62 @@ public class ShaqTeleOp extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            //tracking.update();
-
+            //Driving code
             driveTrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
 
-            if (gamepad1.right_trigger > 0){
-                turret.turnClockwise(gamepad1.right_trigger/2);
-            } else if (gamepad1.left_trigger > 0){
-                turret.turnCounterClockwise(gamepad1.left_trigger/2);
+            //Set tracking mode
+            if(gamepad2.dpad_left){
+                trackingMode = "full";
+                feedback.setLight(gamepad2, RobotConstants.GREEN);
+            } else if(gamepad2.dpad_up){
+                trackingMode = "ll";
+                feedback.setLight(gamepad2, RobotConstants.YELLOW);
+            } else if(gamepad2.dpad_right){
+                trackingMode = "manual";
+                feedback.setLight(gamepad2, RobotConstants.RED);
             }
 
-            if (gamepad1.a){
+            //Automatic tracking
+            if(trackingMode == "full"){
+                tracking.fullTracking();
+            } else if (trackingMode == "ll") {
+                tracking.llTracking();
+            }
+
+            //Manual turret turning
+            turret.turnClockwise(gamepad2.right_trigger - gamepad2.left_trigger);
+
+            //Intake
+            if (gamepad2.a){
                 intake.stop();
-            } else if (gamepad1.x){
+            } else if (gamepad2.x){
                 intake.collect();
-            } else if (gamepad1.b){
+            } else if (gamepad2.b){
                 intake.expel();
-            } else if (gamepad1.y) {
+            } else if (gamepad2.y) {
                 intake.shoot();
             }
 
-            if (gamepad1.right_bumper){
+            //Outtake
+            if (gamepad2.right_bumper){
                 outtake.startFlywheel();
-            } else if (gamepad1.left_bumper){
+            } else if (gamepad2.left_bumper){
                 outtake.stopFlywheel();
             }
 
-            if(gamepad1.dpad_left){
-                outtake.setHoodAngle(RobotConstants.BOTTOM_ANGLE);
-            } else if(gamepad1.dpad_up){
-                outtake.setHoodAngle(38);
-            } else if(gamepad1.dpad_right){
-                outtake.setHoodAngle(RobotConstants.TOP_ANGLE);
-            }
+            //Hood control
+//            if(gamepad2.dpad_left){
+//                outtake.setHoodAngle(RobotConstants.BOTTOM_ANGLE);
+//            } else if(gamepad2.dpad_up){
+//                outtake.setHoodAngle(38);
+//            } else if(gamepad2.dpad_right){
+//                outtake.setHoodAngle(RobotConstants.TOP_ANGLE);
+//            }
 
-            if(gamepad2.a){
-                outtake.flywheel.setPower(0.25);
-            } else if(gamepad2.b){
-                outtake.flywheel.setPower(0.5);
-            } else if(gamepad2.y){
-                outtake.flywheel.setPower(0.75);
-            } else if(gamepad2.x){
-                outtake.flywheel.setPower(1);
-            }
 
-            telemetry.addData("Speed", outtake.getOuttakeVelocity());
-            telemetry.update();
+            if(turret.isAiming() && outtake.reachedSpeed()){
+                feedback.rumble(gamepad2);
+            }
         }
     }
 }

@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 public class OuttakeSubsystem {
 
     public DcMotorEx flywheel;
-
     private Servo hood;
+    private double targetSpeed;
 
 
     public OuttakeSubsystem(HardwareMap hardwareMap) {
@@ -22,15 +22,15 @@ public class OuttakeSubsystem {
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void setOuttakeVelocity(){
-        flywheel.setVelocity(RobotConstants.OUTTAKE_VELOCITY.MAX);
+    public void setVelocity(double speed){
+        targetSpeed = speed;
     }
 
-    public double getOuttakeVelocity(){
+    public double getVelocity(){
         return flywheel.getVelocity();
     }
     public void startFlywheel(){
-        flywheel.setPower(RobotConstants.OUTTAKE_POWER);
+        flywheel.setPower(targetSpeed);
     }
 
     public void stopFlywheel(){
@@ -43,6 +43,10 @@ public class OuttakeSubsystem {
 
     public void setHoodAngle(double angle){
         hood.setPosition(Math.max(0, Math.min(RobotConstants.EXTENDED_SERVO_POSITION,(angle - RobotConstants.HOOD_ANGLE.MIN) / ((RobotConstants.HOOD_ANGLE.MAX - RobotConstants.HOOD_ANGLE.MIN) / RobotConstants.EXTENDED_SERVO_POSITION))));
+    }
+
+    public boolean reachedSpeed(){
+        return (flywheel.getVelocity() == targetSpeed);
     }
 
 }
