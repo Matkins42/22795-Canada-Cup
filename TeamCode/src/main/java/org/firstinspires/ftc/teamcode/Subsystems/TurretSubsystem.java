@@ -27,7 +27,7 @@ public class TurretSubsystem {
         return turret.getCurrentPosition();
     }
 
-    public void turnTo(double target){
+    public void turnTo(double target){  //Issue could be due to changing power, if continues change to be based on angular velocity
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         error = target - turret.getCurrentPosition();
 
