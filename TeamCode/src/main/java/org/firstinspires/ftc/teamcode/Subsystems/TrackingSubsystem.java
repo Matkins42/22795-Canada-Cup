@@ -63,4 +63,8 @@ public class TrackingSubsystem {
             outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
         }
     }
+
+    public boolean trackingTag(){
+        return limeLight.seesTag();
+    }
 }

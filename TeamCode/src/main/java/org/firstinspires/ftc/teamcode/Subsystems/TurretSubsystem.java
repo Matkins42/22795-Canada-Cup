@@ -21,6 +21,8 @@ public class TurretSubsystem {
         turret.setDirection(DcMotor.Direction.REVERSE);
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        time = new ElapsedTime();
     }
 
     public double getPosition(){

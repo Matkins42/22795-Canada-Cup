@@ -33,6 +33,7 @@ public class ShaqTeleOp extends LinearOpMode {
         outtake = new OuttakeSubsystem(hardwareMap);
         turret = new TurretSubsystem(hardwareMap);
         driveTrain = new DrivingSubsystem(hardwareMap);
+        feedback = new FeedbackSubsystem();
 
         tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.BLUE_GOAL);
 
@@ -93,7 +94,7 @@ public class ShaqTeleOp extends LinearOpMode {
 //            }
 
 
-            if(turret.isAiming() && outtake.reachedSpeed()){
+            if(tracking.trackingTag() && turret.isAiming() && outtake.reachedSpeed()){
                 feedback.rumble(gamepad2);
             }
         }

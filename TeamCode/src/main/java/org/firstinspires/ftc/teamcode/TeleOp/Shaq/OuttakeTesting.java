@@ -45,7 +45,7 @@ public class OuttakeTesting extends LinearOpMode {
                 outtake.flywheel.setPower(1);
             }
 
-            telemetry.addData("Speed", outtake.getOuttakeVelocity());
+            telemetry.addData("Speed", outtake.getVelocity());
             telemetry.update();
         }
     }

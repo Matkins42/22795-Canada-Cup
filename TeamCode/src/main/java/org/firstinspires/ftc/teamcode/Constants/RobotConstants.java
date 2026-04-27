@@ -18,9 +18,9 @@ public class RobotConstants {
     public static double ROTATION_POWER = 0.2;
     public static final int TICKS_PER_ROTATION = 146;
     public static final double GEAR_RATIO = (double) 51 / 24;
-    public static double KP = 0.027;
+    public static double KP = 0.03;
     public static double KI = 0.0005;
-    public static double KD = 0.21;
+    public static double KD = 12;
     public static double DEADBAND = 3;
     public static double LL_HEIGHT = 315;
     public static final double LL_ANGLE = 26;
@@ -40,7 +40,7 @@ public class RobotConstants {
     public static final double EXTENDED_SERVO_POSITION = 0.3;
 
     //Feedback Constants
-    public static final int  RUMBLE_DURATION = 1;
+    public static final int  RUMBLE_DURATION = 1000;
     public static final double[] RED = {255, 0, 0};
     public static final double[] YELLOW = {255, 255, 0};
     public static final double[] GREEN = {0, 255, 0};
