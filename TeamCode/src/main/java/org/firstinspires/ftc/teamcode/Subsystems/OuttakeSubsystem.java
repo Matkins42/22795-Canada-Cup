@@ -13,7 +13,7 @@ public class OuttakeSubsystem {
     public DcMotorEx flywheel;
     private Servo hood;
     private double targetSpeed = RobotConstants.OUTTAKE_VELOCITY.MIN;
-    private boolean firing = false;
+    private boolean on = false;
 
 
     public OuttakeSubsystem(HardwareMap hardwareMap) {
@@ -26,7 +26,7 @@ public class OuttakeSubsystem {
     }
 
     public void update(){
-        if (firing) {
+        if (on) {
             flywheel.setVelocity(targetSpeed);
         }
     }
@@ -44,12 +44,12 @@ public class OuttakeSubsystem {
     }
     public void startFlywheel(){
         flywheel.setVelocity(targetSpeed);
-        firing = true;
+        on = true;
     }
 
     public void stopFlywheel(){
         flywheel.setVelocity(0);
-        firing = false;
+        on = false;
     }
 
     public void setHood(double hoodPosition){
