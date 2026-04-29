@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -12,14 +13,22 @@ public class OuttakeSubsystem {
     public DcMotorEx flywheel;
     private Servo hood;
     private double targetSpeed = RobotConstants.OUTTAKE_VELOCITY.MIN;
+    private boolean firing = false;
 
 
     public OuttakeSubsystem(HardwareMap hardwareMap) {
 
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
+        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
         hood = hardwareMap.get(Servo.class, "hood");
         flywheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void update(){
+        if (firing) {
+            flywheel.setVelocity(targetSpeed);
+        }
     }
 
     public void setVelocity(double speed){
@@ -29,12 +38,18 @@ public class OuttakeSubsystem {
     public double getVelocity(){
         return flywheel.getVelocity();
     }
+
+    public double getTargetVelocity(){
+        return targetSpeed;
+    }
     public void startFlywheel(){
         flywheel.setVelocity(targetSpeed);
+        firing = true;
     }
 
     public void stopFlywheel(){
         flywheel.setVelocity(0);
+        firing = false;
     }
 
     public void setHood(double hoodPosition){

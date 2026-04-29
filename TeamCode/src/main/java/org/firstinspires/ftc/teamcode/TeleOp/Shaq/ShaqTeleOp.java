@@ -84,6 +84,8 @@ public class ShaqTeleOp extends LinearOpMode {
                 outtake.stopFlywheel();
             }
 
+            outtake.update();
+
             //Hood control
             if(gamepad2.right_stick_button){
                 outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(-1, 1, -gamepad2.right_stick_y));
@@ -93,6 +95,11 @@ public class ShaqTeleOp extends LinearOpMode {
             if(tracking.trackingTag() && turret.isAiming() && outtake.reachedSpeed()){
                 feedback.rumble(gamepad2);
             }
+
+            telemetry.addData("Speed", outtake.getVelocity());
+            telemetry.addData("TargetSpeed", outtake.getTargetVelocity());
+            telemetry.addData("distance", tracking.getDistance());
+            telemetry.update();
         }
     }
 }

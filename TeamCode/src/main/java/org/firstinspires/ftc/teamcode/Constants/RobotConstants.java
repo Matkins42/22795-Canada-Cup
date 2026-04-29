@@ -11,8 +11,8 @@ public class RobotConstants {
     public static final Target BLUE_GOAL = new Target(1, 0, 144);
     public static final Target RED_GOAL = new Target(0, 144, 144);
     public static final double TAG_HEIGHT = 757;
-    public static final double CLOSE_LIMIT = 1500; //mm
-    public static final double FAR_LIMIT = 3000; //mm
+    public static double CLOSE_LIMIT = 750; //mm
+    public static double FAR_LIMIT = 2000; //mm
 
     //Turret constants
     public static double ROTATION_POWER = 0.2;
@@ -33,7 +33,7 @@ public class RobotConstants {
 
     //Outtake constants
     public static final double OUTTAKE_POWER = 0.9;
-    public static final Range OUTTAKE_VELOCITY = new Range(1000, 2000); //Absolute max velocity at full power is 2380 (ticks/s)
+    public static Range OUTTAKE_VELOCITY = new Range(1000, 2000); //Absolute max velocity at full power is 2380 (ticks/s)
     public static final Range HOOD_ANGLE = new Range(31.22, 44.07);
     public static final double BOTTOM_ANGLE = 31.22;
     public static final double TOP_ANGLE = 44.07;

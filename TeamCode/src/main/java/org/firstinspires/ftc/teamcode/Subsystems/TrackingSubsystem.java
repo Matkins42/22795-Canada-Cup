@@ -44,6 +44,7 @@ public class TrackingSubsystem {
         }
 
         turret.turnTo(targetTicks);
+        adjustOuttake();
     }
 
     public void llTracking(){
@@ -55,13 +56,12 @@ public class TrackingSubsystem {
         }
 
         turret.turnTo(targetTicks);
+        adjustOuttake();
     }
 
     public void adjustOuttake(){
-        if (limeLight.getYAngle() > 5) {
-            outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
-            outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
-        }
+        outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
+        outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
     }
 
     public boolean trackingTag(){
