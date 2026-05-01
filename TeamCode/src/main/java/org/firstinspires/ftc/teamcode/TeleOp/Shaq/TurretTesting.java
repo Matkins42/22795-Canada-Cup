@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.TeleOp.Shaq;
 
 import static java.lang.Math.atan2;
 import static java.lang.Math.round;
@@ -27,8 +27,8 @@ public class TurretTesting extends LinearOpMode {
     private boolean canSeeTag;
     private double xAngle;
     private DcMotor turret;
-    private int TICKS_PER_ROTATION = 538;
-    private double TURRET_GEAR_RATIO = 1.42857143;
+    private int TICKS_PER_ROTATION = 146;
+    private double TURRET_GEAR_RATIO = (double) 17/14;
     private int targetTicks;
 
     @Override

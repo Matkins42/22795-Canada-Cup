@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -9,27 +10,46 @@ import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
 public class OuttakeSubsystem {
 
-    private DcMotorEx flywheel;
+    public DcMotorEx flywheel;
     private Servo hood;
+    private double targetSpeed = RobotConstants.OUTTAKE_VELOCITY.MIN;
+    private boolean on = false;
+
 
     public OuttakeSubsystem(HardwareMap hardwareMap) {
 
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
+        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
         hood = hardwareMap.get(Servo.class, "hood");
         flywheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void setOuttakeVeloicty(){
-        flywheel.setVelocity(RobotConstants.OUTTAKE_Velocity);
+    public void update(){
+        if (on) {
+            flywheel.setVelocity(targetSpeed);
+        }
+    }
 
+    public void setVelocity(double speed){
+        targetSpeed = speed;
+    }
+
+    public double getVelocity(){
+        return flywheel.getVelocity();
+    }
+
+    public double getTargetVelocity(){
+        return targetSpeed;
     }
     public void startFlywheel(){
-        flywheel.setPower(RobotConstants.OUTTAKE_POWER);
+        flywheel.setVelocity(targetSpeed);
+        on = true;
     }
 
     public void stopFlywheel(){
-        flywheel.setPower(0);
+        flywheel.setVelocity(0);
+        on = false;
     }
 
     public void setHood(double hoodPosition){
@@ -37,7 +57,11 @@ public class OuttakeSubsystem {
     }
 
     public void setHoodAngle(double angle){
-        hood.setPosition(Math.max(0, Math.min(RobotConstants.EXTENDED_SERVO_POSITION,(angle - RobotConstants.BOTTOM_ANGLE) / ((RobotConstants.TOP_ANGLE - RobotConstants.BOTTOM_ANGLE) / RobotConstants.EXTENDED_SERVO_POSITION))));
+        hood.setPosition(Math.max(0, Math.min(RobotConstants.EXTENDED_SERVO_POSITION,(angle - RobotConstants.HOOD_ANGLE.MIN) / ((RobotConstants.HOOD_ANGLE.MAX - RobotConstants.HOOD_ANGLE.MIN) / RobotConstants.EXTENDED_SERVO_POSITION))));
+    }
+
+    public boolean reachedSpeed(){
+        return (flywheel.getVelocity() >= targetSpeed);
     }
 
 }

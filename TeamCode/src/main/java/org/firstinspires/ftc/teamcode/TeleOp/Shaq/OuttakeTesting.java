@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.TeleOp.Shaq;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -21,9 +21,9 @@ public class OuttakeTesting extends LinearOpMode {
 
         while(opModeIsActive()){
 
-           if(gamepad1.a){
+           if(gamepad1.right_bumper){
                outtake.startFlywheel();
-           } else if(gamepad1.b){
+           } else if(gamepad1.left_bumper){
                outtake.stopFlywheel();
            }
            
@@ -35,6 +35,18 @@ public class OuttakeTesting extends LinearOpMode {
                outtake.setHoodAngle(RobotConstants.TOP_ANGLE);
            }
 
+            if(gamepad1.a){
+                outtake.flywheel.setPower(0.25);
+            } else if(gamepad1.b){
+                outtake.flywheel.setPower(0.5);
+            } else if(gamepad1.y){
+                outtake.flywheel.setPower(0.75);
+            } else if(gamepad1.x){
+                outtake.flywheel.setPower(1);
+            }
+
+            telemetry.addData("Speed", outtake.getVelocity());
+            telemetry.update();
         }
     }
 }

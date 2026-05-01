@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Practise.Alex;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+@Disabled
 @TeleOp (name="Ilikefridges2", group ="Linear Opmode")
 public class Ilikefridges2 extends LinearOpMode {
-
 
     private DcMotor Intake;
     private RevTouchSensor touchSensor;
