@@ -48,6 +48,8 @@ public class TrackingSubsystem {
     }
 
     public void llTracking(){
+        roadRunner.update();
+
         if(limeLight.seesTag()){
             targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
             distance = limeLight.getDistanceTrig();
@@ -66,5 +68,12 @@ public class TrackingSubsystem {
 
     public boolean trackingTag(){
         return limeLight.seesTag();
+    }
+
+    public double xPos(){
+        return roadRunner.getX();
+    }
+    public double yPos(){
+        return roadRunner.getY();
     }
 }

@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.TeleOp.Shaq;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
@@ -24,7 +22,7 @@ public class ShaqTeleOp extends LinearOpMode {
     private TrackingSubsystem tracking;
     private FeedbackSubsystem feedback;
 
-    private String trackingMode = "ll";
+    private String trackingMode = "full";
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,10 +30,12 @@ public class ShaqTeleOp extends LinearOpMode {
         intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
         turret = new TurretSubsystem(hardwareMap);
-        driveTrain = new DrivingSubsystem(hardwareMap);
         feedback = new FeedbackSubsystem();
 
         tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.BLUE_GOAL);
+        //NOTE: Driving subsystem must be initialised after Roadrunner/Tracking subsystem
+        //else controller scheme is messed up
+        driveTrain = new DrivingSubsystem(hardwareMap);
 
         waitForStart();
 
@@ -99,6 +99,8 @@ public class ShaqTeleOp extends LinearOpMode {
             telemetry.addData("Speed", outtake.getVelocity());
             telemetry.addData("TargetSpeed", outtake.getTargetVelocity());
             telemetry.addData("distance", tracking.getDistance());
+            telemetry.addData("x", tracking.xPos());
+            telemetry.addData("y", tracking.yPos());
             telemetry.update();
         }
     }

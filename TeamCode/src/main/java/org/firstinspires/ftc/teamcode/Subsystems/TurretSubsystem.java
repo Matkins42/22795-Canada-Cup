@@ -30,6 +30,7 @@ public class TurretSubsystem {
     }
 
     public void turnTo(double target){  //Issue could be due to changing power, if continues change to be based on angular velocity
+        target = Math.max(degreesToTicks(RobotConstants.TURRET_RANGE/-2), Math.min(degreesToTicks(RobotConstants.TURRET_RANGE/2), target));
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         error = target - turret.getCurrentPosition();
 

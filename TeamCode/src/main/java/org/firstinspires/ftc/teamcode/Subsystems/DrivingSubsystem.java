@@ -11,6 +11,7 @@ public class DrivingSubsystem {
     private DcMotor rightBack;
     private double power = 0.5;
 
+    //Must be initialised after roadrunner subsystem initialisation
     public DrivingSubsystem(HardwareMap hardwareMap) {
         leftFront = hardwareMap.get(DcMotor.class, "leftFront");
         rightFront = hardwareMap.get(DcMotor.class, "rightFront");
