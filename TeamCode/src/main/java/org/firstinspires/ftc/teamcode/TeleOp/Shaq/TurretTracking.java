@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Shaq;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -26,7 +27,7 @@ public class TurretTracking extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         limeLight = new LimeLightSubsystem(hardwareMap);
-        roadRunner = new RoadRunnerSubsystem(hardwareMap);
+        roadRunner = new RoadRunnerSubsystem(hardwareMap, new Pose2d(0, 0, Math.toRadians(180)));
         turret = new TurretSubsystem(hardwareMap);
         driveTrain = new DrivingSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
