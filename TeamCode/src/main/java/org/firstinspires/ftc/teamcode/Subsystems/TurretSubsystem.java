@@ -35,7 +35,7 @@ public class TurretSubsystem {
         error = target - turret.getCurrentPosition();
 
         integral += error;
-        derivative = time.seconds()*(error - lastError);
+        derivative = (error - lastError) / time.seconds();
 
         power = Math.max(-1, Math.min(1, (RobotConstants.KP * error) + (RobotConstants.KI * integral) + (RobotConstants.KD * derivative))); //Calculates turning power and limits between 1 and -1
 
