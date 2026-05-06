@@ -12,12 +12,14 @@ public class RoadRunnerSubsystem {
 
     private MecanumDrive roadRunner;
     private Pose2d pose;
+    private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
 
     //Must be initialised before driving subsystem initialisation
     public RoadRunnerSubsystem(HardwareMap hardwareMap) {
         roadRunner = new MecanumDrive(hardwareMap, new Pose2d(0,0, Math.toRadians(180)));
         roadRunner.updatePoseEstimate();
         pose = roadRunner.localizer.getPose();
+
     }
 
     public void update(){
@@ -25,7 +27,11 @@ public class RoadRunnerSubsystem {
         pose = roadRunner.localizer.getPose();
     }
 
-    public double getEstimatedAngle(RobotConstants.Target target){
+    public void setTarget(RobotConstants.Target newTarget){
+        target = newTarget;
+    }
+
+    public double getEstimatedAngle(){
         return Math.toDegrees(normaliseAngle(atan2((target.GOAL_Y - pose.position.y),(pose.position.x - target.GOAL_X)) + normaliseAngle(Math.toRadians(180) + pose.heading.toDouble())));
     }
 

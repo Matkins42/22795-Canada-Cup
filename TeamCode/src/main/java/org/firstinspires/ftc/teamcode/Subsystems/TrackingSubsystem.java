@@ -20,12 +20,13 @@ public class TrackingSubsystem {
         outtake = outtakeSubsystem;
         limeLight = new LimeLightSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(hardwareMap);
-        target = goal;
+        setTarget(goal);
     }
 
     public void setTarget(RobotConstants.Target goal){
         target = goal;
         limeLight.switchPipeline(target.PIPELINE);
+        roadRunner.setTarget(target);
     }
 
     public double getDistance(){
@@ -39,7 +40,7 @@ public class TrackingSubsystem {
             targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
             distance = limeLight.getDistanceTrig();
         } else{
-            targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
+            targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle());
             distance = roadRunner.getDistance();
         }
 

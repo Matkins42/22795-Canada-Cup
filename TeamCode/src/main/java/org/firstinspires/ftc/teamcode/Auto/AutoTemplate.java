@@ -52,6 +52,31 @@ public class AutoTemplate extends LinearOpMode {
             return false; //False means action runs once, true loops the action
         };
 
+        Action collect = packet -> {
+            intake.collect();
+            return false;
+        };
+
+        Action shoot = packet -> {
+            intake.shoot();
+            return false;
+        };
+
+        Action stopIntake = packet -> {
+            intake.stop();
+            return false;
+        };
+
+        Action startFlywheel = packet -> {
+            outtake.startFlywheel();
+            return false;
+        };
+
+        Action stopFlywheel = packet -> {
+            outtake.stopFlywheel();
+            return false;
+        };
+
         Action trackTag = packet -> {
             tracking.fullTracking();
             return true;
