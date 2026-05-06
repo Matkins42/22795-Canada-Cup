@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Shaq;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -32,7 +33,7 @@ public class ShaqTeleOp extends LinearOpMode {
         turret = new TurretSubsystem(hardwareMap);
         feedback = new FeedbackSubsystem();
 
-        tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.BLUE_GOAL);
+        tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.BLUE_GOAL, new Pose2d(0, 0, Math.toRadians(180)));
         //NOTE: Driving subsystem must be initialised after Roadrunner/Tracking subsystem
         //else controller scheme is messed up
         driveTrain = new DrivingSubsystem(hardwareMap);

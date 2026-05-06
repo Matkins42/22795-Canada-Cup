@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
@@ -15,11 +16,11 @@ public class TrackingSubsystem {
     private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
     private double distance = 0;
 
-    public TrackingSubsystem(HardwareMap hardwareMap, TurretSubsystem turretSubsystem, OuttakeSubsystem outtakeSubsystem, RobotConstants.Target goal) {
+    public TrackingSubsystem(HardwareMap hardwareMap, TurretSubsystem turretSubsystem, OuttakeSubsystem outtakeSubsystem, RobotConstants.Target goal, Pose2d startPos) {
         turret = turretSubsystem;
         outtake = outtakeSubsystem;
         limeLight = new LimeLightSubsystem(hardwareMap);
-        roadRunner = new RoadRunnerSubsystem(hardwareMap);
+        roadRunner = new RoadRunnerSubsystem(hardwareMap, startPos);
         setTarget(goal);
     }
 

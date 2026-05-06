@@ -44,7 +44,7 @@ public class AutoTemplate extends LinearOpMode {
         intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
         turret = new TurretSubsystem(hardwareMap);
-        tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+        tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.BLUE_GOAL, initialPose); //Change this depending on what team we are
 
         //Create actions here
         Action exampleAction = packet -> {

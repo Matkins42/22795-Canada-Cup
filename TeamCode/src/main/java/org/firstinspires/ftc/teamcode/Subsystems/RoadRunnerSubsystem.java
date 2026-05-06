@@ -15,8 +15,8 @@ public class RoadRunnerSubsystem {
     private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
 
     //Must be initialised before driving subsystem initialisation
-    public RoadRunnerSubsystem(HardwareMap hardwareMap) {
-        roadRunner = new MecanumDrive(hardwareMap, new Pose2d(0,0, Math.toRadians(180)));
+    public RoadRunnerSubsystem(HardwareMap hardwareMap, Pose2d startPos) {
+        roadRunner = new MecanumDrive(hardwareMap, startPos);
         roadRunner.updatePoseEstimate();
         pose = roadRunner.localizer.getPose();
 
