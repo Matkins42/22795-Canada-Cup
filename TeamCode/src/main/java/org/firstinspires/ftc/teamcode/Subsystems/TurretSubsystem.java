@@ -8,12 +8,14 @@ import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
 public class TurretSubsystem {
     private DcMotor turret;
+    private double position;
+    private double lastPosition;
     private double error;
-    private double lastError;
     private double integral; //Sum of errors (offsets) - therefore increases over time
     private double derivative; //The rate of change of the error (how fast the motor is moving)
     private double power;
     private ElapsedTime time;
+    private double dt;
     private boolean aiming;
 
     public TurretSubsystem(HardwareMap hardwareMap) {
@@ -32,12 +34,14 @@ public class TurretSubsystem {
     public void turnTo(double target){  //Issue could be due to changing power, if continues change to be based on angular velocity
         target = Math.max(degreesToTicks(RobotConstants.TURRET_RANGE/-2), Math.min(degreesToTicks(RobotConstants.TURRET_RANGE/2), target));
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        error = target - turret.getCurrentPosition();
+        position = turret.getCurrentPosition();
+        error = target - position;
+        dt = Math.max(time.seconds(), 0.001);
 
-        integral += error;
-        derivative = (error - lastError) / time.seconds();
+        integral += error * dt;
+        derivative = -(position - lastPosition) / dt;
 
-        power = Math.max(-1, Math.min(1, (RobotConstants.KP * error) + (RobotConstants.KI * integral) + (RobotConstants.KD * derivative))); //Calculates turning power and limits between 1 and -1
+        power = Math.max(-0.5, Math.min(0.5, (RobotConstants.KP * error) + (RobotConstants.KI * integral) + (RobotConstants.KD * derivative))); //Calculates turning power and limits between 1 and -1
 
         if (Math.abs(error) < RobotConstants.DEADBAND){
             integral = 0;
@@ -48,7 +52,7 @@ public class TurretSubsystem {
             aiming = false;
         }
 
-        lastError = error;
+        lastPosition = position;
         time.reset();
     }
 

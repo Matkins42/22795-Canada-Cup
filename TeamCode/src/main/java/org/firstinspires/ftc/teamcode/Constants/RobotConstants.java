@@ -20,7 +20,7 @@ public class RobotConstants {
     public static final int TICKS_PER_ROTATION = 538; //146 1150rpm
     public static final double GEAR_RATIO = (double) 51 / 24;
     public static double KP = 0.13; //0.03 for 1150 motor
-    public static double KI = 0.0004; //0.0005 for 1150 motor
+    public static double KI = 0; //0.0005 for 1150 motor
     public static double KD = 0.008; //12 for 1150 motor-
     public static double DEADBAND = 3;
     public static double LL_HEIGHT = 315;
