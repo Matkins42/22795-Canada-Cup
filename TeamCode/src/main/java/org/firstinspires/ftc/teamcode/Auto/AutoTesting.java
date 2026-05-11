@@ -1,22 +1,13 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import androidx.annotation.NonNull;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
@@ -27,26 +18,26 @@ import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 
-@Disabled //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
-@Autonomous(name = "Template", group = "Autonomous") //Change the name here to what you want to show on the driver station
-public class AutoTemplate extends LinearOpMode {
+@Autonomous(name = "Testing", group = "Autonomous") //Change the name here to what you want to show on the driver station
+public class AutoTesting extends LinearOpMode {
 
     //Put initialization of variables here (e.g subsystems)
+    private RoadRunnerSubsystem roadRunner;
     private IntakeSubsystem intake;
     private OuttakeSubsystem outtake;
     private TurretSubsystem turret;
     private TrackingSubsystem tracking;
-    private RoadRunnerSubsystem roadRunner;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0)); //Sets the robots starting position
+        Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(180)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
+        turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.RED_GOAL); //Change this depending on what team we are
 
         //Create actions here
         Action exampleAction = packet -> {
@@ -106,15 +97,14 @@ public class AutoTemplate extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) return;
+//        if (isStopRequested()) return;
+//        while(opModeIsActive()){
+//            tracking.fullTracking(null);
+//        }
 
         Actions.runBlocking(
                 new ParallelAction( //Put actions that run independant of movement, e.g sensing and tracking
-                        trackTag,
-                        new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
-                                exampleTrajectory,
-                                exampleAction
-                        )
+                        trackTag
                 )
         );
     }

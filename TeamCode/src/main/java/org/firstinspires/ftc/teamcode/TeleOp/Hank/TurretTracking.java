@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.TeleOp.Shaq;
+package org.firstinspires.ftc.teamcode.TeleOp.Hank;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.LimeLightSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
@@ -27,7 +28,7 @@ public class TurretTracking extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         limeLight = new LimeLightSubsystem(hardwareMap);
-        roadRunner = new RoadRunnerSubsystem(hardwareMap, new Pose2d(0, 0, Math.toRadians(180)));
+        roadRunner = new RoadRunnerSubsystem(new MecanumDrive(hardwareMap, new Pose2d(0, 0, Math.toRadians(180))));
         turret = new TurretSubsystem(hardwareMap);
         driveTrain = new DrivingSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
@@ -62,10 +63,10 @@ public class TurretTracking extends LinearOpMode {
                //targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle(target));
            }
 
-           turret.turnTo(targetTicks);
+           turret.turnTo(targetTicks, null);
 
            if (limeLight.getYAngle() > 5) {
-               outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
+               outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(RobotConstants.HOOD_CLOSE_LIMIT, RobotConstants.HOOD_FAR_LIMIT, distance));
            }
 
            telemetry.addData("Target Ticks", targetTicks);

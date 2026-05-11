@@ -1,19 +1,23 @@
-package org.firstinspires.ftc.teamcode.TeleOp.Shaq;
+package org.firstinspires.ftc.teamcode.TeleOp.Hank;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
+import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.FeedbackSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.RoadRunnerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
-@TeleOp(name = "Shaq TeleOp", group = "Linear Opmode")
-public class ShaqTeleOp extends LinearOpMode {
+@TeleOp(name = "Hank TeleOp", group = "Linear Opmode")
+public class HankTeleOp extends LinearOpMode {
 
 
     private IntakeSubsystem intake;
@@ -21,19 +25,24 @@ public class ShaqTeleOp extends LinearOpMode {
     private TurretSubsystem turret;
     private DrivingSubsystem driveTrain;
     private TrackingSubsystem tracking;
+    private RoadRunnerSubsystem roadRunner;
     private FeedbackSubsystem feedback;
 
     private String trackingMode = "full";
 
     @Override
     public void runOpMode() throws InterruptedException {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        TelemetryPacket packet = new TelemetryPacket();
+
 
         intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
         turret = new TurretSubsystem(hardwareMap);
         feedback = new FeedbackSubsystem();
 
-        tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.RED_GOAL, new Pose2d(0, 0, Math.toRadians(180)));
+        roadRunner = new RoadRunnerSubsystem(new MecanumDrive(hardwareMap, new Pose2d(0, 0, Math.toRadians(180))));
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.RED_GOAL);
         //NOTE: Driving subsystem must be initialised after Roadrunner/Tracking subsystem
         //else controller scheme is messed up
         driveTrain = new DrivingSubsystem(hardwareMap);
@@ -59,9 +68,9 @@ public class ShaqTeleOp extends LinearOpMode {
 
             //Automatic tracking
             if(trackingMode == "full"){
-                tracking.fullTracking();
+                tracking.fullTracking(packet);
             } else if (trackingMode == "ll") {
-                tracking.llTracking();
+                tracking.llTracking(packet);
             }
 
             //Manual turret turning
@@ -103,6 +112,8 @@ public class ShaqTeleOp extends LinearOpMode {
             telemetry.addData("x", tracking.xPos());
             telemetry.addData("y", tracking.yPos());
             telemetry.update();
+
+            dashboard.sendTelemetryPacket(packet);
         }
     }
 }

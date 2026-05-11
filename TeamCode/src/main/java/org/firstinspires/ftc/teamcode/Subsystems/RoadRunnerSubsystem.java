@@ -15,8 +15,8 @@ public class RoadRunnerSubsystem {
     private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
 
     //Must be initialised before driving subsystem initialisation
-    public RoadRunnerSubsystem(HardwareMap hardwareMap, Pose2d startPos) {
-        roadRunner = new MecanumDrive(hardwareMap, startPos);
+    public RoadRunnerSubsystem(MecanumDrive drive) {
+        roadRunner = drive;
         roadRunner.updatePoseEstimate();
         pose = roadRunner.localizer.getPose();
 
@@ -56,6 +56,6 @@ public class RoadRunnerSubsystem {
         return angle;
     }
     public double getDistance(){
-        return Math.sqrt((getX() * getX()) + (getY() * getY()));
+        return 25.4 * Math.sqrt(Math.pow(target.GOAL_Y - pose.position.y, 2) + Math.pow(pose.position.x - target.GOAL_X, 2));
     }
 }

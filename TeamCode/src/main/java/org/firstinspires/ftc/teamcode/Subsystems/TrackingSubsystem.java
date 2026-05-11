@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -16,11 +17,11 @@ public class TrackingSubsystem {
     private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
     private double distance = 0;
 
-    public TrackingSubsystem(HardwareMap hardwareMap, TurretSubsystem turretSubsystem, OuttakeSubsystem outtakeSubsystem, RobotConstants.Target goal, Pose2d startPos) {
+    public TrackingSubsystem(HardwareMap hardwareMap, RoadRunnerSubsystem roadRunerSubsystem, TurretSubsystem turretSubsystem, OuttakeSubsystem outtakeSubsystem, RobotConstants.Target goal) {
         turret = turretSubsystem;
         outtake = outtakeSubsystem;
         limeLight = new LimeLightSubsystem(hardwareMap);
-        roadRunner = new RoadRunnerSubsystem(hardwareMap, startPos);
+        roadRunner = roadRunerSubsystem;
         setTarget(goal);
     }
 
@@ -34,7 +35,7 @@ public class TrackingSubsystem {
         return distance;
     }
 
-    public void fullTracking(){
+    public void fullTracking(TelemetryPacket packet){
         roadRunner.update();
 
         if(limeLight.seesTag()){
@@ -45,11 +46,16 @@ public class TrackingSubsystem {
             distance = roadRunner.getDistance();
         }
 
-        turret.turnTo(targetTicks);
+        if (packet != null){
+            packet.put("limeLight", turret.degreesToTicks(limeLight.getXAngle()));
+            packet.put("targetTicks", targetTicks);
+        }
+
+        turret.turnTo(targetTicks, packet);
         adjustOuttake();
     }
 
-    public void llTracking(){
+    public void llTracking(TelemetryPacket packet){
         roadRunner.update();
 
         if(limeLight.seesTag()){
@@ -59,13 +65,18 @@ public class TrackingSubsystem {
             targetTicks = turret.getPosition();
         }
 
-        turret.turnTo(targetTicks);
+        if (packet != null){
+            packet.put("limeLight", turret.degreesToTicks(limeLight.getXAngle()));
+            packet.put("targetTicks", targetTicks);
+        }
+
+        turret.turnTo(targetTicks, packet);
         adjustOuttake();
     }
 
     public void adjustOuttake(){
-        outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
-        outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.lerp(RobotConstants.CLOSE_LIMIT, RobotConstants.FAR_LIMIT, distance));
+        outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(RobotConstants.HOOD_CLOSE_LIMIT, RobotConstants.HOOD_FAR_LIMIT, distance));
+        outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.lerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance));
     }
 
     public boolean trackingTag(){

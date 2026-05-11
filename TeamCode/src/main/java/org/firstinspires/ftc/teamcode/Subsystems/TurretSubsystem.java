@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -31,7 +32,7 @@ public class TurretSubsystem {
         return turret.getCurrentPosition();
     }
 
-    public void turnTo(double target){  //Issue could be due to changing power, if continues change to be based on angular velocity
+    public void turnTo(double target, TelemetryPacket packet){
         target = Math.max(degreesToTicks(RobotConstants.TURRET_RANGE/-2), Math.min(degreesToTicks(RobotConstants.TURRET_RANGE/2), target));
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         position = turret.getCurrentPosition();
@@ -41,7 +42,7 @@ public class TurretSubsystem {
         integral += error * dt;
         derivative = -(position - lastPosition) / dt;
 
-        power = Math.max(-0.5, Math.min(0.5, (RobotConstants.KP * error) + (RobotConstants.KI * integral) + (RobotConstants.KD * derivative))); //Calculates turning power and limits between 1 and -1
+        power = Math.max(-1, Math.min(1, (RobotConstants.KP * error) + (RobotConstants.KI * integral) + (RobotConstants.KD * derivative))); //Calculates turning power and limits between 1 and -1
 
         if (Math.abs(error) < RobotConstants.DEADBAND){
             integral = 0;
@@ -54,6 +55,16 @@ public class TurretSubsystem {
 
         lastPosition = position;
         time.reset();
+
+        if (packet!=null){
+            packet.put("target", target);
+            packet.put("position", position);
+            packet.put("power", power);
+            packet.put("error", error);
+            packet.put("integral", integral);
+            packet.put("derivative", derivative);
+            packet.put("dt", dt);
+        }
     }
 
     public void turnClockwise(double input){
