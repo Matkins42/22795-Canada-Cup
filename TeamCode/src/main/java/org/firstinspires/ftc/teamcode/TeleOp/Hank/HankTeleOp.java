@@ -67,14 +67,18 @@ public class HankTeleOp extends LinearOpMode {
             }
 
             //Automatic tracking
-            if(trackingMode == "full"){
+            if(Math.abs(gamepad2.left_stick_x) > 0.1){
+                turret.turnClockwise(gamepad2.left_stick_x);
+            } else if (trackingMode == "full"){
                 tracking.fullTracking(packet);
             } else if (trackingMode == "ll") {
                 tracking.llTracking(packet);
+            } else{
+                turret.turnClockwise(0);
             }
 
             //Manual turret turning
-            turret.turnClockwise(gamepad2.left_stick_x);
+            //turret.turnClockwise(gamepad2.left_stick_x);
 
             //Intake
             if (gamepad2.a) {

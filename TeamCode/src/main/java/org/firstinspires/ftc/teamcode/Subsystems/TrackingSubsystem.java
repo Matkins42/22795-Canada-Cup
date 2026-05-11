@@ -75,8 +75,8 @@ public class TrackingSubsystem {
     }
 
     public void adjustOuttake(){
-        outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.lerp(RobotConstants.HOOD_CLOSE_LIMIT, RobotConstants.HOOD_FAR_LIMIT, distance));
-        outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.lerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance));
+        outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.eerp(RobotConstants.HOOD_CLOSE_LIMIT, RobotConstants.HOOD_FAR_LIMIT, distance, RobotConstants.HOOD_GRADIENT));
+        outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.eerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance, RobotConstants.VEL_GRADIENT));
     }
 
     public boolean trackingTag(){

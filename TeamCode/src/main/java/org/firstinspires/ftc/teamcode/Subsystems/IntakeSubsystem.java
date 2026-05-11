@@ -34,7 +34,7 @@ public class IntakeSubsystem {
     }
     public void shoot(){
         frontIntake.setPower(RobotConstants.FORWARDS_INTAKE_POWER);
-        backIntake.setPower(RobotConstants.FORWARDS_INTAKE_POWER);
+        backIntake.setPower(RobotConstants.FIRING_SPEED);
     }
 }
 

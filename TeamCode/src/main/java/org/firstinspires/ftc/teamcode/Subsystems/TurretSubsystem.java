@@ -69,7 +69,7 @@ public class TurretSubsystem {
 
     public void turnClockwise(double input){
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setPower(input);
+        turret.setPower(input * RobotConstants.MANUAL_ROTATION_SPEED);
     }
 
     public void turnCounterClockwise(double input){
