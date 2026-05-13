@@ -1,22 +1,15 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
-import com.acmerobotics.roadrunner.ParallelAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import androidx.annotation.NonNull;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
@@ -27,9 +20,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 
-@Disabled //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
-@Autonomous(name = "Template", group = "Autonomous") //Change the name here to what you want to show on the driver station
-public class AutoTemplate extends LinearOpMode {
+ //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
+@Autonomous(name = "BlueFar", group = "Autonomous") //Change the name here to what you want to show on the driver station
+public class FarzoneAuto extends LinearOpMode {
 
     //Put initialization of variables here (e.g subsystems)
     private IntakeSubsystem intake;
@@ -38,21 +31,20 @@ public class AutoTemplate extends LinearOpMode {
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
 
-    @Override
+
+     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(56, 56, Math.toRadians(0)); //Sets the robots starting position
+        Pose2d initialPose = new Pose2d(61, -8 , Math.toRadians(180)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
+        turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
 
         //Create actions here
-        Action exampleAction = packet -> {
-            //Put action code here
-            return false; //False means action runs once, true loops the action
-        };
+
 
         Action collect = packet -> {
             intake.collect();
@@ -84,23 +76,54 @@ public class AutoTemplate extends LinearOpMode {
             return true;
         };
 
-        //Create trajectories here
-        Action exampleTrajectory = drive.actionBuilder(initialPose)
-//                    Put trajectory code here
 
-//                    e.g
-//                    .lineToYSplineHeading(33, Math.toRadians(0))
-//                    .waitSeconds(2)
-//                    .setTangent(Math.toRadians(90))
-//                    .lineToY(48)
-//                    .setTangent(Math.toRadians(0))
-//                    .lineToX(32)
-//                    .strafeTo(new Vector2d(44.5, 30))
-//                    .turn(Math.toRadians(180))
-//                    .lineToX(47.5)
-//                    .waitSeconds(3)
+         Action moveToRow = drive.actionBuilder(initialPose)
+                 .splineTo(new Vector2d(33, -35), Math.toRadians(-90))
+                 .strafeToLinearHeading(new Vector2d(33, -57), Math.toRadians(-90))
+                 .strafeToLinearHeading(new Vector2d(57, -17), Math.toRadians(-90))
+                 .build();
 
-                    .build();
+
+         Action moveToCorner1 = drive.actionBuilder(new Pose2d(57, -17, Math.toRadians(-90)))
+                 .splineTo(new Vector2d(60, -58), Math.toRadians(-80))
+                 .strafeToLinearHeading(new Vector2d(60, -17), Math.toRadians(-90))
+                 .build();
+
+         Action moveToCorner2 = drive.actionBuilder(new Pose2d(57, -17, Math.toRadians(-90)))
+                 .splineTo(new Vector2d(60, -58), Math.toRadians(-80))
+                 .strafeToLinearHeading(new Vector2d(60, -17), Math.toRadians(-90))
+                 .build();
+
+         Action initialFire = new SequentialAction(
+                 startFlywheel,
+                 new SleepAction(3),
+                 shoot,
+                 new SleepAction(2)
+                 );
+
+         Action rowCycle = new SequentialAction(
+                 collect,
+                 moveToRow,
+                 shoot,
+                 new SleepAction(3)
+         );
+
+         Action cornerCycle1 = new SequentialAction(
+                 collect,
+                 moveToCorner1,
+                 shoot,
+                 new SleepAction(3)
+         );
+
+         Action cornerCycle2 = new SequentialAction(
+                 collect,
+                 moveToCorner2,
+                 shoot,
+                 new SleepAction(3)
+         );
+
+
+
 
         // Code here runs on initialization
 
@@ -112,8 +135,12 @@ public class AutoTemplate extends LinearOpMode {
                 new ParallelAction( //Put actions that run independant of movement, e.g sensing and tracking
                         trackTag,
                         new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
-                                exampleTrajectory,
-                                exampleAction
+                                initialFire,
+                                rowCycle,
+                                collect,
+                                cornerCycle1,
+                                cornerCycle2,
+                                stopFlywheel
                         )
                 )
         );
