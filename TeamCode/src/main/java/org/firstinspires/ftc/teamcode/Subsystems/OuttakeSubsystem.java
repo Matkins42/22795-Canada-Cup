@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
@@ -14,6 +15,9 @@ public class OuttakeSubsystem {
     private Servo hood;
     private double targetSpeed = RobotConstants.OUTTAKE_VELOCITY.MIN;
     private boolean on = false;
+
+    private double increase = 0;
+    private ElapsedTime dt = new ElapsedTime();
 
 
     public OuttakeSubsystem(HardwareMap hardwareMap) {
@@ -31,8 +35,18 @@ public class OuttakeSubsystem {
         }
     }
 
+    public void increaseSpeed(){
+        increase += RobotConstants.INCREASE_RATE * dt.seconds();
+        increase = Math.max(0, Math.min(RobotConstants.MAX_INCREASE, increase));
+        dt.reset();
+    }
+
+    public void resetIncrease(){
+        increase = 0;
+    }
+
     public void setVelocity(double speed){
-        targetSpeed = speed;
+        targetSpeed = speed + increase;
     }
 
     public double getVelocity(){

@@ -83,12 +83,16 @@ public class HankTeleOp extends LinearOpMode {
             //Intake
             if (gamepad2.a) {
                 intake.shoot();
-            } else if (gamepad2.left_trigger > 0){
-                intake.collect();
-            } else if (gamepad2.right_trigger > 0){
-                intake.expel();
+                outtake.increaseSpeed();
             } else{
-                intake.stop();
+                outtake.resetIncrease();
+                if (gamepad2.left_trigger > 0){
+                    intake.collect();
+                } else if (gamepad2.right_trigger > 0){
+                    intake.expel();
+                } else{
+                    intake.stop();
+                }
             }
 
             //Outtake

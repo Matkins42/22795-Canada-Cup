@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -38,6 +40,8 @@ public class AutoTemplate extends LinearOpMode {
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
 
+    private VelConstraint speedExample;
+
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(56, 56, Math.toRadians(0)); //Sets the robots starting position
@@ -47,6 +51,9 @@ public class AutoTemplate extends LinearOpMode {
         outtake = new OuttakeSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+
+        //Create vel constraints for custom velocity, this is for linear movement (not turning) - the units are inches per second
+        speedExample = new TranslationalVelConstraint(20);
 
         //Create actions here
         Action exampleAction = packet -> {
@@ -87,17 +94,11 @@ public class AutoTemplate extends LinearOpMode {
         //Create trajectories here
         Action exampleTrajectory = drive.actionBuilder(initialPose)
 //                    Put trajectory code here
-
 //                    e.g
+
 //                    .lineToYSplineHeading(33, Math.toRadians(0))
-//                    .waitSeconds(2)
-//                    .setTangent(Math.toRadians(90))
-//                    .lineToY(48)
-//                    .setTangent(Math.toRadians(0))
-//                    .lineToX(32)
-//                    .strafeTo(new Vector2d(44.5, 30))
+//                    .strafeTo(new Vector2d(44.5, 30), speedExample)  -------  set a custom speed at the end of each movement function
 //                    .turn(Math.toRadians(180))
-//                    .lineToX(47.5)
 //                    .waitSeconds(3)
 
                     .build();
