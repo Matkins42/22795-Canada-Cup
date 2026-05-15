@@ -5,6 +5,9 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.VelConstraint;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -39,6 +42,8 @@ public class AutoTesting extends LinearOpMode {
         turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.RED_GOAL); //Change this depending on what team we are
+
+        VelConstraint slow = new TranslationalVelConstraint(20);
 
         //Create actions here
         Action exampleAction = packet -> {
@@ -79,18 +84,18 @@ public class AutoTesting extends LinearOpMode {
         //Create trajectories here
         Action exampleTrajectory = drive.actionBuilder(initialPose)
 //                    Put trajectory code here
-
+//
 //                    e.g
-//                    .lineToYSplineHeading(33, Math.toRadians(0))
-//                    .waitSeconds(2)
-//                    .setTangent(Math.toRadians(90))
-//                    .lineToY(48)
-//                    .setTangent(Math.toRadians(0))
-//                    .lineToX(32)
-//                    .strafeTo(new Vector2d(44.5, 30))
-//                    .turn(Math.toRadians(180))
-//                    .lineToX(47.5)
-//                    .waitSeconds(3)
+                    .lineToYSplineHeading(33, Math.toRadians(0))
+                    .waitSeconds(2)
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(48)
+                    .setTangent(Math.toRadians(0))
+                    .lineToX(32)
+                    .strafeTo(new Vector2d(44.5, 30))
+                    .turn(Math.toRadians(180))
+                    .lineToX(47.5)
+                    .waitSeconds(3)
 
                     .build();
 

@@ -14,7 +14,7 @@ public class RobotConstants {
     public static final double TARGET_OFFSET = 1000; //mm Distance behind the tag we are aiming at
     public static double VEL_CLOSE_LIMIT = 750; //mm
     public static double VEL_FAR_LIMIT = 3800; //mm
-    public static double VEL_GRADIENT = 1.3;
+    public static double VEL_GRADIENT = 1.37;
     public static double HOOD_CLOSE_LIMIT = 750; //mm
     public static double HOOD_FAR_LIMIT = 3800; //mm
     public static double HOOD_GRADIENT = 0.6;
@@ -34,14 +34,18 @@ public class RobotConstants {
     //Intake constants
     public static final double FORWARDS_INTAKE_POWER = 1;
     public static final double BACKWARDS_INTAKE_POWER = -1;
+    public static double FIRING_POWER = 0.8;
 
     //Outtake constants
-    public static Range OUTTAKE_VELOCITY = new Range(1472, 2350); //Absolute max velocity at full power is 2380 (ticks/s)
+    public static Range OUTTAKE_VELOCITY = new Range(1300, 2260); //Absolute max velocity at full power is 2380 (ticks/s)
     public static final Range HOOD_ANGLE = new Range(31.22, 44.07);
     public static final double BOTTOM_ANGLE = 31.22;
     public static final double TOP_ANGLE = 44.07;
     public static final double EXTENDED_SERVO_POSITION = 0.3;
-    public static double FIRING_SPEED = 1;
+    public static double INCREASE_RATE = 100; //ticks per second per second
+    public static double MAX_INCREASE = 190; //ticks per second
+
+
 
     //Feedback Constants
     public static final int  RUMBLE_DURATION = 1000;
