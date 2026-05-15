@@ -39,7 +39,7 @@ public class TrackingSubsystem {
         roadRunner.update();
 
         if(limeLight.seesTag()){
-            targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
+            targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle()) + turret.degreesToTicks(Math.toDegrees(limeLight.getOffsetAngle()));
             distance = limeLight.getDistanceTrig();
         } else{
             targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle());
@@ -88,5 +88,12 @@ public class TrackingSubsystem {
     }
     public double yPos(){
         return roadRunner.getY();
+    }
+    public double getPoseDistance(){
+        return limeLight.getDistancePose();
+    }
+
+    public double getTagAngle(){
+        return limeLight.getTagAngle();
     }
 }

@@ -112,9 +112,10 @@ public class HankTeleOp extends LinearOpMode {
 
             telemetry.addData("Speed", outtake.getVelocity());
             telemetry.addData("TargetSpeed", outtake.getTargetVelocity());
-            telemetry.addData("distance", tracking.getDistance());
+            telemetry.addData("Distance", tracking.getDistance());
             telemetry.addData("x", tracking.xPos());
             telemetry.addData("y", tracking.yPos());
+
             telemetry.update();
 
             dashboard.sendTelemetryPacket(packet);
