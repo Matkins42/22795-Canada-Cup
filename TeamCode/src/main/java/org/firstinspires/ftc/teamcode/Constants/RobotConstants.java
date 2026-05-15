@@ -11,7 +11,7 @@ public class RobotConstants {
     public static final Target BLUE_GOAL = new Target(1, -65, -65); //Inches
     public static final Target RED_GOAL = new Target(0, -65, 65); //Inches
     public static final double TAG_HEIGHT = 757;
-    public static final double TARGET_OFFSET = 1000; //mm Distance behind the tag we are aiming at
+    public static final double TARGET_OFFSET = 100; //mm Distance behind the tag we are aiming at
     public static double VEL_CLOSE_LIMIT = 750; //mm
     public static double VEL_FAR_LIMIT = 3800; //mm
     public static double VEL_GRADIENT = 1.37;

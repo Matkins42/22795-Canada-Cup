@@ -39,7 +39,7 @@ public class TrackingSubsystem {
         roadRunner.update();
 
         if(limeLight.seesTag()){
-            targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle()) + turret.degreesToTicks(Math.toDegrees(limeLight.getOffsetAngle()));
+            targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle()) - turret.degreesToTicks(Math.toDegrees(limeLight.getOffsetAngle()));
             distance = limeLight.getDistanceTrig();
         } else{
             targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle());
@@ -49,6 +49,9 @@ public class TrackingSubsystem {
         if (packet != null){
             packet.put("limeLight", turret.degreesToTicks(limeLight.getXAngle()));
             packet.put("targetTicks", targetTicks);
+            packet.put("distance", distance);
+            packet.put("targetOuttakeSpeed", outtake.getTargetVelocity());
+            packet.put("outtakeSpeed", outtake.getVelocity());
         }
 
         turret.turnTo(targetTicks, packet);
