@@ -76,9 +76,15 @@ public class LimeLightSubsystem {
     }
 
     public double getOffsetAngle(){ //Angle from april tag to be looking at the centre of the goal
-        double angle = Math.abs(getTagAngle());
-        double direction = (getTagAngle()/angle);
-        double length = Math.sqrt(Math.pow(RobotConstants.TARGET_OFFSET, 2) + Math.pow(getDistanceTrig(), 2) - 2 * RobotConstants.TARGET_OFFSET * getDistanceTrig()*Math.acos(Math.toRadians(angle + 90)));
+        double angle = getTagAngle();
+        double direction;
+        if (angle > 0){
+            direction = 1;
+        } else{
+            direction = -1;
+        }
+        angle = Math.abs(angle);
+        double length = Math.sqrt(Math.pow(RobotConstants.TARGET_OFFSET, 2) + Math.pow(getDistanceTrig(), 2) - 2 * RobotConstants.TARGET_OFFSET * getDistanceTrig()*Math. cos(Math.toRadians(angle + 90)));
         return direction * Math.acos((Math.pow(getDistanceTrig(), 2) + Math.pow(length, 2) - Math.pow(RobotConstants.TARGET_OFFSET, 2))/(2 * getDistanceTrig() * length));
     }
 }

@@ -42,7 +42,7 @@ public class HankTeleOp extends LinearOpMode {
         feedback = new FeedbackSubsystem();
 
         roadRunner = new RoadRunnerSubsystem(new MecanumDrive(hardwareMap, new Pose2d(0, 0, Math.toRadians(180))));
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.RED_GOAL);
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL);
         //NOTE: Driving subsystem must be initialised after Roadrunner/Tracking subsystem
         //else controller scheme is messed up
         driveTrain = new DrivingSubsystem(hardwareMap);
@@ -51,6 +51,12 @@ public class HankTeleOp extends LinearOpMode {
 
         while(opModeIsActive()){
 
+            //Set target
+            if(gamepad1.x){
+                tracking.setTarget(RobotConstants.BLUE_GOAL);
+            } else if (gamepad1.b){
+                tracking.setTarget(RobotConstants.RED_GOAL);
+            }
             //Driving code
             driveTrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
 
