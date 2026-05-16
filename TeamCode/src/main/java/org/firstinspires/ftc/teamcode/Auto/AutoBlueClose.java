@@ -7,12 +7,14 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.Subsystems.RoadRunnerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
@@ -25,16 +27,18 @@ public class AutoBlueClose extends LinearOpMode {
     private OuttakeSubsystem outtake;
     private TurretSubsystem turret;
     private TrackingSubsystem tracking;
+    private RoadRunnerSubsystem roadRunner;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(-50, -50, Math.toRadians(225)); //Sets the robots starting position
+        Pose2d initialPose = new Pose2d(-50, -50, Math.toRadians(255)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
         turret = new TurretSubsystem(hardwareMap);
-        tracking = new TrackingSubsystem(hardwareMap, turret, outtake, RobotConstants.BLUE_GOAL, initialPose); //Change this depending on what team we are
+        roadRunner = new RoadRunnerSubsystem(drive);
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.RED_GOAL); //Change this depending on what team we are
 
         //Create actions here
         Action collect = packet -> {
@@ -65,7 +69,7 @@ public class AutoBlueClose extends LinearOpMode {
 
 
         Action trackTag = packet -> {
-            tracking.fullTracking();
+            tracking.fullTracking(packet);
             return true;
         };
 
@@ -100,7 +104,7 @@ public class AutoBlueClose extends LinearOpMode {
 
         Action movement5 = drive.actionBuilder(new Pose2d(-15, -20, Math.toRadians(300)))
                 .waitSeconds(2)
-                .splineTo(new Vector2d(13, -61), Math.toRadians(250))
+                .splineTo(new Vector2d(14, -61), Math.toRadians(250))
 
                 .build();
 
