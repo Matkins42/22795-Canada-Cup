@@ -56,6 +56,7 @@ public class TrackingSubsystem {
 
         turret.turnTo(targetTicks, packet);
         adjustOuttake();
+        outtake.update();
     }
 
     public void llTracking(TelemetryPacket packet){
@@ -75,6 +76,7 @@ public class TrackingSubsystem {
 
         turret.turnTo(targetTicks, packet);
         adjustOuttake();
+        outtake.update();
     }
 
     public void adjustOuttake(){
