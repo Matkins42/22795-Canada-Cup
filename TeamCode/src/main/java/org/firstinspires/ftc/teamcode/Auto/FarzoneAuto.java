@@ -5,7 +5,9 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -32,6 +34,13 @@ public class FarzoneAuto extends LinearOpMode {
     private RoadRunnerSubsystem roadRunner;
 
 
+    private VelConstraint slow;
+    private VelConstraint medium;
+    private VelConstraint fast;
+     
+
+
+
      @Override
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(61, -8 , Math.toRadians(180)); //Sets the robots starting position
@@ -42,6 +51,10 @@ public class FarzoneAuto extends LinearOpMode {
         turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+
+         slow = new TranslationalVelConstraint(15);
+         medium = new TranslationalVelConstraint(30);
+         fast = new TranslationalVelConstraint(50);
 
         //Create actions here
 
@@ -79,19 +92,19 @@ public class FarzoneAuto extends LinearOpMode {
 
          Action moveToRow = drive.actionBuilder(initialPose)
                  .splineTo(new Vector2d(33, -35), Math.toRadians(-90))
-                 .strafeToLinearHeading(new Vector2d(33, -57), Math.toRadians(-90))
+                 .strafeToLinearHeading(new Vector2d(33, -57), Math.toRadians(-90),slow)
                  .strafeToLinearHeading(new Vector2d(57, -17), Math.toRadians(-90))
                  .build();
 
 
          Action moveToCorner1 = drive.actionBuilder(new Pose2d(57, -17, Math.toRadians(-90)))
                  .splineTo(new Vector2d(60, -58), Math.toRadians(-80))
-                 .strafeToLinearHeading(new Vector2d(60, -17), Math.toRadians(-90))
+                 .strafeToLinearHeading(new Vector2d(58, -17), Math.toRadians(-90))
                  .build();
 
          Action moveToCorner2 = drive.actionBuilder(new Pose2d(57, -17, Math.toRadians(-90)))
                  .splineTo(new Vector2d(60, -58), Math.toRadians(-80))
-                 .strafeToLinearHeading(new Vector2d(60, -17), Math.toRadians(-90))
+                 .strafeToLinearHeading(new Vector2d(58, -17), Math.toRadians(-90))
                  .build();
 
          Action initialFire = new SequentialAction(
@@ -143,6 +156,6 @@ public class FarzoneAuto extends LinearOpMode {
                                 stopFlywheel
                         )
                 )
-        );
+        );;
     }
 }
