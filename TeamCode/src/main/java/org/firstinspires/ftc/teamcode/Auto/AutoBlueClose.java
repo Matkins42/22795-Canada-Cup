@@ -4,7 +4,9 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -28,10 +30,14 @@ public class AutoBlueClose extends LinearOpMode {
     private TurretSubsystem turret;
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
+    private VelConstraint ultrafast;
+    private VelConstraint fast;
+    private VelConstraint medium;
+    private VelConstraint slow;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(-50, -50, Math.toRadians(255)); //Sets the robots starting position
+        Pose2d initialPose = new Pose2d(-50, -50, Math.toRadians(225)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         intake = new IntakeSubsystem(hardwareMap);
@@ -39,6 +45,12 @@ public class AutoBlueClose extends LinearOpMode {
         turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.RED_GOAL); //Change this depending on what team we are
+
+        fast = new TranslationalVelConstraint(60);
+        medium = new TranslationalVelConstraint(25);
+        slow = new TranslationalVelConstraint(17);
+        ultrafast = new TranslationalVelConstraint(50);
+
 
         //Create actions here
         Action collect = packet -> {
@@ -75,56 +87,100 @@ public class AutoBlueClose extends LinearOpMode {
 
         //Create trajectories here
         Action movement1 = drive.actionBuilder(initialPose)
-                .waitSeconds(1)
-                .strafeToLinearHeading(new Vector2d(-15, -20), Math.toRadians(270))
+                .strafeToLinearHeading(new Vector2d(-15, -20), Math.toRadians(270),fast)
+                .waitSeconds(0.5)
 
                 .build();
 
 
 
         Action movement2 = drive.actionBuilder(new Pose2d(-15, -20, Math.toRadians (270)))
+                .waitSeconds(1.5)
+                .strafeToLinearHeading(new Vector2d(16, -30), Math.toRadians(270),fast)
+
+
+                .build();
+
+        Action movement3 = drive.actionBuilder(new Pose2d(16, -30, Math.toRadians(270)))
+                //              .strafeToLinearHeading(new Vector2d(18, 50), Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(13, -61), Math.toRadians(270),slow)
+
+
+                .build();
+
+        Action movement4 = drive.actionBuilder(new Pose2d(13, -61, Math.toRadians(270)))
+                .strafeToLinearHeading(new Vector2d(-3, -20), Math.toRadians(300),fast)
+//                .strafeToLinearHeading(new Vector2d(5, 30), Math.toRadians(90))
+                //               .strafeToLinearHeading(new Vector2d(-15, 20), Math.toRadians(60))
+
+                .build();
+
+        Action movement5_1 = drive.actionBuilder(new Pose2d(-3, -20, Math.toRadians(300)))//-15, 20, Math.toRadians(60)
                 .waitSeconds(2)
-                .strafeToLinearHeading(new Vector2d(18, -30), Math.toRadians(270))
-
-
-                .build();
-
-        Action movement3 = drive.actionBuilder(new Pose2d(18, -30, Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(18, -50), Math.toRadians(270))
-                .strafeToLinearHeading(new Vector2d(8.5, -61), Math.toRadians(270))
-
+                .splineTo(new Vector2d(12.5, -62.5), Math.toRadians(250),fast)
 
                 .build();
 
-        Action movement4 = drive.actionBuilder(new Pose2d(8.5, -61, Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(5, -30), Math.toRadians(270))
-                .strafeToLinearHeading(new Vector2d(-15, -20), Math.toRadians(300))
-
-                .build();
-
-        Action movement5 = drive.actionBuilder(new Pose2d(-15, -20, Math.toRadians(300)))
+        Action movement5_2 = drive.actionBuilder(new Pose2d(-3, -20, Math.toRadians(300)))//-15, 20, Math.toRadians(60)
                 .waitSeconds(2)
-                .splineTo(new Vector2d(14, -61), Math.toRadians(250))
+                .splineTo(new Vector2d(12.5, -62.5), Math.toRadians(250),fast)
 
                 .build();
 
-        Action movement6 = drive.actionBuilder(new Pose2d(13, -61, Math.toRadians(250)))
-                .strafeToLinearHeading(new Vector2d(26, -66), Math.toRadians(221))
+        Action movement6_1 = drive.actionBuilder(new Pose2d(12.5, -62.5, Math.toRadians(250)))
+                .strafeToLinearHeading(new Vector2d(26, -66), Math.toRadians(221),fast)
                 .waitSeconds(1)
 
                 .build();
 
+        Action movement6_2 = drive.actionBuilder(new Pose2d(12.5, -62.5, Math.toRadians(250)))
+                .strafeToLinearHeading(new Vector2d(26, -66), Math.toRadians(221),fast)
+                .waitSeconds(1)
+
+                .build();
 
         Action movement7 = drive.actionBuilder(new Pose2d(26, -66, Math.toRadians(221)))
+                .strafeToLinearHeading(new Vector2d(-3, -20), Math.toRadians(300))
+
+                .build();
+
+
+        Action movement8_1 = drive.actionBuilder(new Pose2d(26, -66, Math.toRadians(221)))
+                .strafeToLinearHeading(new Vector2d(-3, -20), Math.toRadians(300),fast)
+
+                .build();
+
+        Action movement8_2 = drive.actionBuilder(new Pose2d(26, -66, Math.toRadians(221)))
+                .strafeToLinearHeading(new Vector2d(-3, -20), Math.toRadians(300),fast)
+
+                .build();
+
+
+
+        Action movement9 = drive.actionBuilder(new Pose2d(-3, -20, Math.toRadians(300)))
+                .waitSeconds(2)
+                .strafeToLinearHeading(new Vector2d(-11, -30), Math.toRadians(270))
+
+                .build();
+
+        Action movement10 = drive.actionBuilder(new Pose2d(-11, -30, Math.toRadians(270)))
+                .waitSeconds(2)
+                .strafeToLinearHeading(new Vector2d(-11, -50), Math.toRadians(270))
+
+                .build();
+
+        Action movement11 = drive.actionBuilder(new Pose2d(-11, -50, Math.toRadians(270)))
                 .strafeToLinearHeading(new Vector2d(-2, -20), Math.toRadians(250))
 
                 .build();
 
-        Action movement8 = drive.actionBuilder(new Pose2d(-2, -20, Math.toRadians(250)))
+        Action movement12 = drive.actionBuilder(new Pose2d(-2, -20, Math.toRadians(270)))
                 .waitSeconds(2)
-                .strafeToLinearHeading(new Vector2d(-55, -22), Math.toRadians(250))
+                .strafeToLinearHeading(new Vector2d(-55, -22), Math.toRadians(250),ultrafast)
 
                 .build();
+
+
 
 
 
@@ -148,13 +204,31 @@ public class AutoBlueClose extends LinearOpMode {
                                 stopIntake,
                                 movement4,
                                 shoot,
-                                movement5,
+                                movement5_1,
                                 collect,
-                                movement6,
+                                movement6_1,
                                 stopIntake,
-                                movement7,
+                                movement8_1,
                                 shoot,
-                                movement8,
+
+
+                                movement5_2,
+                                collect,
+                                movement6_2,
+                                stopIntake,
+                                movement8_2,
+                                shoot,
+
+
+
+//                                movement9,
+                                //                               collect,
+                                //                               movement10,
+                                //                               stopIntake,
+                                //                               movement11,
+                                //                               shoot,
+
+                                movement12,
                                 stopFlywheel,
                                 stopIntake
                         )
