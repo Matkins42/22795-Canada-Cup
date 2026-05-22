@@ -49,7 +49,7 @@ public class RedFarAuto extends LinearOpMode {
         outtake = new OuttakeSubsystem(hardwareMap);
         turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.RED_GOAL); //Change this depending on what team we are
 
         slow = new TranslationalVelConstraint(15);
         medium = new TranslationalVelConstraint(30);
@@ -114,25 +114,25 @@ public class RedFarAuto extends LinearOpMode {
 
 
         Action moveToRow = drive.actionBuilder(initialPose)
-                .splineTo(new Vector2d(33, 35), Math.toRadians(-90),fast)
-                .strafeToLinearHeading(new Vector2d(33, 57), Math.toRadians(-90),slow)
-                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(-90),fast)
+                .splineTo(new Vector2d(33, 35), Math.toRadians(90),fast)
+                .strafeToLinearHeading(new Vector2d(33, 57), Math.toRadians(90),slow)
+                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(90),fast)
                 .build();
 
 
-        Action moveToCorner1 = drive.actionBuilder(new Pose2d(59, 10, Math.toRadians(-90)))
-                .splineTo(new Vector2d(61, 59), Math.toRadians(-80),fast)
-                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(-90),fast)
+        Action moveToCorner1 = drive.actionBuilder(new Pose2d(59, 10, Math.toRadians(90)))
+                .splineTo(new Vector2d(61, 59), Math.toRadians(80),fast)
+                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(90),fast)
                 .build();
 
-        Action moveToCorner2 = drive.actionBuilder(new Pose2d(59, 10, Math.toRadians(-90)))
-                .splineTo(new Vector2d(61, 59), Math.toRadians(-80),fast)
-                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(-90),fast)
+        Action moveToCorner2 = drive.actionBuilder(new Pose2d(59, 10, Math.toRadians(90)))
+                .splineTo(new Vector2d(61, 59), Math.toRadians(80),fast)
+                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(90),fast)
                 .build();
 
-        Action moveToCorner3 = drive.actionBuilder(new Pose2d(59, 10, Math.toRadians(-90)))
-                .splineTo(new Vector2d(61, 59), Math.toRadians(-80),fast)
-                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(-90),fast)
+        Action moveToCorner3 = drive.actionBuilder(new Pose2d(59, 10, Math.toRadians(90)))
+                .splineTo(new Vector2d(61, 59), Math.toRadians(80),fast)
+                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(90),fast)
                 .build();
 
         Action initialFire = new SequentialAction(
