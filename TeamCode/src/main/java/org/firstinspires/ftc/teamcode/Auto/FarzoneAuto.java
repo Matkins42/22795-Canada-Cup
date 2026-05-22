@@ -56,9 +56,9 @@ public class FarzoneAuto extends LinearOpMode {
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
 
-         slow = new TranslationalVelConstraint(15);
-         medium = new TranslationalVelConstraint(30);
-         fast = new TranslationalVelConstraint(50);
+         slow = new TranslationalVelConstraint(35);
+         medium = new TranslationalVelConstraint(55);
+         fast = new TranslationalVelConstraint(80);
 
         shootingTimer = new ElapsedTime();
 
@@ -80,7 +80,7 @@ public class FarzoneAuto extends LinearOpMode {
                 shootingTimer.reset();
                 shooting = true;
             }
-            if (shootingTimer.seconds() < 3){
+            if (shootingTimer.seconds() < 2){
                 intake.shoot();
                 outtake.increaseSpeed();
                 return true;
@@ -121,23 +121,28 @@ public class FarzoneAuto extends LinearOpMode {
          Action moveToRow = drive.actionBuilder(initialPose)
                  .splineTo(new Vector2d(33, -35), Math.toRadians(-90),fast)
                  .strafeToLinearHeading(new Vector2d(33, -57), Math.toRadians(-90),slow)
-                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
+                 .splineTo(new Vector2d(59,-10), Math.toRadians(-90),fast)
+
+                // .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
                  .build();
 
 
          Action moveToCorner1 = drive.actionBuilder(new Pose2d(59, -10, Math.toRadians(-90)))
                  .splineTo(new Vector2d(61, -59), Math.toRadians(-80),fast)
-                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
+                 .splineTo(new Vector2d(59, -10), Math.toRadians(-80),fast)
+                 //.strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
                  .build();
 
          Action moveToCorner2 = drive.actionBuilder(new Pose2d(59, -10, Math.toRadians(-90)))
                  .splineTo(new Vector2d(61, -59), Math.toRadians(-80),fast)
-                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
+                 .splineTo(new Vector2d(59, -10), Math.toRadians(-80),fast)
+                // .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
                  .build();
 
          Action moveToCorner3 = drive.actionBuilder(new Pose2d(59, -10, Math.toRadians(-90)))
                  .splineTo(new Vector2d(61, -59), Math.toRadians(-80),fast)
-                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
+                 .splineTo(new Vector2d(59, -10), Math.toRadians(-80),fast)
+                // .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
                  .build();
 
          Action initialFire = new SequentialAction(
@@ -166,8 +171,8 @@ public class FarzoneAuto extends LinearOpMode {
          Action cornerCycle3 = new SequentialAction(
                  collect,
                  moveToCorner3,
-                 shoot,
-                 new SleepAction(3)
+                 shoot
+
          );
 
 
@@ -185,7 +190,6 @@ public class FarzoneAuto extends LinearOpMode {
                         new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
                                 initialFire,
                                 rowCycle,
-                                collect,
                                 cornerCycle1,
                                 cornerCycle2,
                                 cornerCycle3,
