@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
@@ -34,6 +35,9 @@ public class AutoBlueClose extends LinearOpMode {
     private VelConstraint fast;
     private VelConstraint medium;
     private VelConstraint slow;
+    private boolean shooting = false;
+    private ElapsedTime shootingTimer;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -60,8 +64,20 @@ public class AutoBlueClose extends LinearOpMode {
         };
 
         Action shoot = packet -> {
-            intake.shoot();
-            return false;
+            if (!shooting){
+                shootingTimer.reset();
+                shooting = true;
+            }
+            if (shootingTimer.seconds() < 3){
+                intake.shoot();
+                outtake.increaseSpeed();
+                return true;
+            } else{
+                shooting = false;
+                outtake.resetIncrease();
+                intake.stop();
+                return false;
+            }
         };
 
         Action stopIntake = packet -> {
