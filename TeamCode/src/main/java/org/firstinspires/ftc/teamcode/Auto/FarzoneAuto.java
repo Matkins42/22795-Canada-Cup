@@ -121,18 +121,23 @@ public class FarzoneAuto extends LinearOpMode {
          Action moveToRow = drive.actionBuilder(initialPose)
                  .splineTo(new Vector2d(33, -35), Math.toRadians(-90))
                  .strafeToLinearHeading(new Vector2d(33, -57), Math.toRadians(-90),slow)
-                 .strafeToLinearHeading(new Vector2d(57, -17), Math.toRadians(-90))
+                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90))
                  .build();
 
 
-         Action moveToCorner1 = drive.actionBuilder(new Pose2d(57, -17, Math.toRadians(-90)))
-                 .splineTo(new Vector2d(60, -58), Math.toRadians(-80))
-                 .strafeToLinearHeading(new Vector2d(58, -17), Math.toRadians(-90))
+         Action moveToCorner1 = drive.actionBuilder(new Pose2d(59, -10, Math.toRadians(-90)))
+                 .splineTo(new Vector2d(61, -59), Math.toRadians(-80))
+                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90))
                  .build();
 
-         Action moveToCorner2 = drive.actionBuilder(new Pose2d(57, -17, Math.toRadians(-90)))
-                 .splineTo(new Vector2d(60, -58), Math.toRadians(-80))
-                 .strafeToLinearHeading(new Vector2d(58, -17), Math.toRadians(-90))
+         Action moveToCorner2 = drive.actionBuilder(new Pose2d(59, -10, Math.toRadians(-90)))
+                 .splineTo(new Vector2d(61, -59), Math.toRadians(-80))
+                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90))
+                 .build();
+
+         Action moveToCorner3 = drive.actionBuilder(new Pose2d(59, -10, Math.toRadians(-90)))
+                 .splineTo(new Vector2d(61, -59), Math.toRadians(-80))
+                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90))
                  .build();
 
          Action initialFire = new SequentialAction(
@@ -158,6 +163,12 @@ public class FarzoneAuto extends LinearOpMode {
                  moveToCorner2,
                  shoot
          );
+         Action cornerCycle3 = new SequentialAction(
+                 collect,
+                 moveToCorner3,
+                 shoot,
+                 new SleepAction(3)
+         );
 
 
 
@@ -177,6 +188,7 @@ public class FarzoneAuto extends LinearOpMode {
                                 collect,
                                 cornerCycle1,
                                 cornerCycle2,
+                                cornerCycle3,
                                 stopFlywheel
                         )
                 )
