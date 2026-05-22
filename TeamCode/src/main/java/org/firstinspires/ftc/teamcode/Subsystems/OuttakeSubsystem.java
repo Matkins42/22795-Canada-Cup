@@ -46,7 +46,12 @@ public class OuttakeSubsystem {
     }
 
     public void setVelocity(double speed){
-        targetSpeed = speed + increase;
+        if (getVelocity() < speed - 20)
+            targetSpeed = speed + increase;
+        else{
+            resetIncrease();
+            targetSpeed = speed;
+        }
     }
 
     public double getVelocity(){
@@ -75,7 +80,11 @@ public class OuttakeSubsystem {
     }
 
     public boolean reachedSpeed(){
-        return (flywheel.getVelocity() >= targetSpeed);
+        return (flywheel.getVelocity() >= targetSpeed - 20 && flywheel.getVelocity() <= targetSpeed + 20);
+    }
+
+    public double getHoodPosition(){
+        return hood.getPosition();
     }
 
 }

@@ -19,7 +19,10 @@ public class RoadRunnerSubsystem {
         roadRunner = drive;
         roadRunner.updatePoseEstimate();
         pose = roadRunner.localizer.getPose();
+    }
 
+    public void setPose(Pose2d pose){
+        roadRunner.localizer.setPose(pose);
     }
 
     public void update(){

@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
@@ -19,7 +20,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 @TeleOp(name = "Hank TeleOp", group = "Linear Opmode")
 public class HankTeleOp extends LinearOpMode {
 
-
     private IntakeSubsystem intake;
     private OuttakeSubsystem outtake;
     private TurretSubsystem turret;
@@ -29,6 +29,7 @@ public class HankTeleOp extends LinearOpMode {
     private FeedbackSubsystem feedback;
 
     private String trackingMode = "full";
+    private double manualOuttakeSpeed = RobotConstants.CLOSE_OUTTAKE_SPEED;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -47,15 +48,27 @@ public class HankTeleOp extends LinearOpMode {
         //else controller scheme is messed up
         driveTrain = new DrivingSubsystem(hardwareMap);
 
+        //Starting lights
+        feedback.setLight(gamepad1, RobotConstants.BLUE);
+        feedback.setLight(gamepad2, RobotConstants.GREEN);
+
         waitForStart();
 
         while(opModeIsActive()){
 
             //Set target
-            if(gamepad1.x){
+            if(gamepad1.x && gamepad1.left_trigger > 0 && gamepad1.right_trigger > 0){
                 tracking.setTarget(RobotConstants.BLUE_GOAL);
-            } else if (gamepad1.b){
+                feedback.setLight(gamepad1, RobotConstants.BLUE);
+            } else if (gamepad1.b && gamepad1.left_trigger > 0 && gamepad1.right_trigger > 0){
                 tracking.setTarget(RobotConstants.RED_GOAL);
+                feedback.setLight(gamepad1, RobotConstants.RED);
+            }
+
+            if(gamepad1.right_bumper && gamepad1.left_bumper && gamepad1.a){
+                roadRunner.setPose(RobotConstants.RESET_POSE); //Resets the entire roadrunner
+            } else if(gamepad1.right_bumper && gamepad1.left_bumper && gamepad1.y){
+                roadRunner.setPose(new Pose2d(roadRunner.getX(), roadRunner.getY(), Math.toRadians(180))); //Resets the roadrunner heading
             }
             //Driving code
             driveTrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
@@ -67,6 +80,9 @@ public class HankTeleOp extends LinearOpMode {
             } else if(gamepad2.dpad_up){
                 trackingMode = "ll";
                 feedback.setLight(gamepad2, RobotConstants.YELLOW);
+            } else if(gamepad2.dpad_down){
+                trackingMode = "rr";
+                feedback.setLight(gamepad2, RobotConstants.PURPLE);
             } else if(gamepad2.dpad_right){
                 trackingMode = "manual";
                 feedback.setLight(gamepad2, RobotConstants.RED);
@@ -75,26 +91,36 @@ public class HankTeleOp extends LinearOpMode {
             //Automatic tracking
             if(Math.abs(gamepad2.left_stick_x) > 0.1){
                 turret.turnClockwise(gamepad2.left_stick_x);
-            } else if (trackingMode == "full"){
+            } else if(trackingMode.equals("full")){
                 tracking.fullTracking(packet);
-            } else if (trackingMode == "ll") {
+            } else if(trackingMode.equals("ll")) {
                 tracking.llTracking(packet);
+            } else if(trackingMode.equals("rr")) {
+                tracking.rrTracking(packet);
             } else{
                 turret.turnClockwise(0);
             }
 
-            //Manual turret turning
-            //turret.turnClockwise(gamepad2.left_stick_x);
+            //Setting Manual Outtake Speed
+            if(trackingMode.equals("manual")){
+                if(gamepad2.x)
+                    manualOuttakeSpeed = (RobotConstants.CLOSE_OUTTAKE_SPEED);
+                else if(gamepad2.b){
+                    manualOuttakeSpeed = (RobotConstants.FAR_OUTTAKE_SPEED);
+                }
+                outtake.setVelocity(manualOuttakeSpeed);
+                outtake.update();
+            }
 
             //Intake
-            if (gamepad2.a) {
+            if(gamepad2.a) {
                 intake.shoot();
                 outtake.increaseSpeed();
             } else{
                 outtake.resetIncrease();
-                if (gamepad2.left_trigger > 0){
+                if(gamepad2.left_trigger > 0){
                     intake.collect();
-                } else if (gamepad2.right_trigger > 0){
+                } else if(gamepad2.right_trigger > 0){
                     intake.expel();
                 } else{
                     intake.stop();
@@ -102,9 +128,9 @@ public class HankTeleOp extends LinearOpMode {
             }
 
             //Outtake
-            if (gamepad2.right_bumper){
+            if(gamepad2.right_bumper){
                 outtake.startFlywheel();
-            } else if (gamepad2.left_bumper){
+            } else if(gamepad2.left_bumper){
                 outtake.stopFlywheel();
             }
 
@@ -115,15 +141,17 @@ public class HankTeleOp extends LinearOpMode {
 
             //Vibrates when ready to shoot
             if(tracking.trackingTag() && turret.isAiming() && outtake.reachedSpeed()){
+                feedback.rumble(gamepad1);
                 feedback.rumble(gamepad2);
             }
 
+            telemetry.addData("SeesTag", tracking.seesTag());
             telemetry.addData("Speed", outtake.getVelocity());
             telemetry.addData("TargetSpeed", outtake.getTargetVelocity());
             telemetry.addData("Distance", tracking.getDistance());
+            telemetry.addData("Hood", outtake.getHoodPosition());
             telemetry.addData("x", tracking.xPos());
             telemetry.addData("y", tracking.yPos());
-
             telemetry.update();
 
             dashboard.sendTelemetryPacket(packet);

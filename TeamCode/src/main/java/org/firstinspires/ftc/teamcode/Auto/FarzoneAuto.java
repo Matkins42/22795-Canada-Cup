@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
@@ -32,6 +33,9 @@ public class FarzoneAuto extends LinearOpMode {
     private TurretSubsystem turret;
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
+
+    private ElapsedTime shootingTimer;
+    private boolean shooting;
 
 
     private VelConstraint slow;
@@ -56,6 +60,8 @@ public class FarzoneAuto extends LinearOpMode {
          medium = new TranslationalVelConstraint(30);
          fast = new TranslationalVelConstraint(50);
 
+        shootingTimer = new ElapsedTime();
+
         //Create actions here
 
 
@@ -64,9 +70,31 @@ public class FarzoneAuto extends LinearOpMode {
             return false;
         };
 
+         Action startTimer = packet -> {
+             shootingTimer.reset();
+             return false;
+         };
+
         Action shoot = packet -> {
-            intake.shoot();
-            return false;
+            if (!shooting){
+                shootingTimer.reset();
+                shooting = true;
+            }
+            if (shootingTimer.seconds() < 3){
+                intake.shoot();
+                outtake.increaseSpeed();
+                return true;
+            } else{
+                shooting = false;
+                outtake.resetIncrease();
+                intake.stop();
+                return false;
+            }
+        };
+
+        Action resetShooting = packet -> {
+           outtake.resetIncrease();
+           return false;
         };
 
         Action stopIntake = packet -> {
@@ -110,29 +138,25 @@ public class FarzoneAuto extends LinearOpMode {
          Action initialFire = new SequentialAction(
                  startFlywheel,
                  new SleepAction(3),
-                 shoot,
-                 new SleepAction(2)
+                 shoot
                  );
 
          Action rowCycle = new SequentialAction(
                  collect,
                  moveToRow,
-                 shoot,
-                 new SleepAction(3)
+                 shoot
          );
 
          Action cornerCycle1 = new SequentialAction(
                  collect,
                  moveToCorner1,
-                 shoot,
-                 new SleepAction(3)
+                 shoot
          );
 
          Action cornerCycle2 = new SequentialAction(
                  collect,
                  moveToCorner2,
-                 shoot,
-                 new SleepAction(3)
+                 shoot
          );
 
 

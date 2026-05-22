@@ -50,7 +50,7 @@ public class LimeLightSubsystem {
     }
 
     public Pose3D get3dPose(){
-        if (limeLight.getLatestResult().getFiducialResults().size() > 0) {
+        if (!limeLight.getLatestResult().getFiducialResults().isEmpty()) {
             return limeLight.getLatestResult().getFiducialResults().get(0).getTargetPoseCameraSpace();
         } else{
             return null;
@@ -64,27 +64,32 @@ public class LimeLightSubsystem {
 
     public double getTagAngle(){
         Pose3D pose = get3dPose();
+        double angle;
         if(pose != null){
-            return pose.getOrientation().getYaw();
+            angle = pose.getOrientation().getYaw();
+            if(angle < RobotConstants.TAG_YAW_CLAMP && angle > -RobotConstants.TAG_YAW_CLAMP){
+                angle = 0;
+            }
         } else{
-            return 0;
+            angle = 0;
         }
+        return angle;
     }
 
     public double getDistanceTrig(){
         return (RobotConstants.TAG_HEIGHT - RobotConstants.LL_HEIGHT)/(Math.tan(Math.toRadians(limeLight.getLatestResult().getTy() + RobotConstants.LL_ANGLE)));
     }
 
-    public double getOffsetAngle(){ //Angle from april tag to be looking at the centre of the goal
+    public double getOffsetAngle(){ //Angle from april tag to be looking at the centre of the goal (When not using POI)
         double angle = getTagAngle();
         double direction;
         if (angle > 0){
-            direction = 1;
-        } else{
             direction = -1;
+        } else{
+            direction = 1;
         }
         angle = Math.abs(angle);
-        double length = Math.sqrt(Math.pow(RobotConstants.TARGET_OFFSET, 2) + Math.pow(getDistanceTrig(), 2) - 2 * RobotConstants.TARGET_OFFSET * getDistanceTrig()*Math. cos(Math.toRadians(angle + 90)));
+        double length = Math.sqrt(Math.pow(RobotConstants.TARGET_OFFSET, 2) + Math.pow(getDistanceTrig(), 2) - 2 * RobotConstants.TARGET_OFFSET * getDistanceTrig()*Math. cos(Math.toRadians(90 - angle + 90 + RobotConstants.NORMAL_ANGLE_OFFSET)));
         return direction * Math.acos((Math.pow(getDistanceTrig(), 2) + Math.pow(length, 2) - Math.pow(RobotConstants.TARGET_OFFSET, 2))/(2 * getDistanceTrig() * length));
     }
 }

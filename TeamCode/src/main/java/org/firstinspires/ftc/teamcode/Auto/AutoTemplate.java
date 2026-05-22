@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
 import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.VelConstraint;
@@ -19,6 +20,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
@@ -42,14 +44,19 @@ public class AutoTemplate extends LinearOpMode {
 
     private VelConstraint speedExample;
 
+    private boolean shooting = false;
+    private ElapsedTime shootingTimer;
+
+
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(56, 56, Math.toRadians(0)); //Sets the robots starting position
+        Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
+        turret = new TurretSubsystem(hardwareMap);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
 
         //Create vel constraints for custom velocity, this is for linear movement (not turning) - the units are inches per second
@@ -67,8 +74,20 @@ public class AutoTemplate extends LinearOpMode {
         };
 
         Action shoot = packet -> {
-            intake.shoot();
-            return false;
+            if (!shooting){
+                shootingTimer.reset();
+                shooting = true;
+            }
+            if (shootingTimer.seconds() < 3){
+                intake.shoot();
+                outtake.increaseSpeed();
+                return true;
+            } else{
+                shooting = false;
+                outtake.resetIncrease();
+                intake.stop();
+                return false;
+            }
         };
 
         Action stopIntake = packet -> {
