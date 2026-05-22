@@ -119,25 +119,25 @@ public class FarzoneAuto extends LinearOpMode {
 
 
          Action moveToRow = drive.actionBuilder(initialPose)
-                 .splineTo(new Vector2d(33, -35), Math.toRadians(-90))
+                 .splineTo(new Vector2d(33, -35), Math.toRadians(-90),fast)
                  .strafeToLinearHeading(new Vector2d(33, -57), Math.toRadians(-90),slow)
-                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90))
+                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
                  .build();
 
 
          Action moveToCorner1 = drive.actionBuilder(new Pose2d(59, -10, Math.toRadians(-90)))
-                 .splineTo(new Vector2d(61, -59), Math.toRadians(-80))
-                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90))
+                 .splineTo(new Vector2d(61, -59), Math.toRadians(-80),fast)
+                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
                  .build();
 
          Action moveToCorner2 = drive.actionBuilder(new Pose2d(59, -10, Math.toRadians(-90)))
-                 .splineTo(new Vector2d(61, -59), Math.toRadians(-80))
-                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90))
+                 .splineTo(new Vector2d(61, -59), Math.toRadians(-80),fast)
+                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
                  .build();
 
          Action moveToCorner3 = drive.actionBuilder(new Pose2d(59, -10, Math.toRadians(-90)))
-                 .splineTo(new Vector2d(61, -59), Math.toRadians(-80))
-                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90))
+                 .splineTo(new Vector2d(61, -59), Math.toRadians(-80),fast)
+                 .strafeToLinearHeading(new Vector2d(59, -10), Math.toRadians(-90),fast)
                  .build();
 
          Action initialFire = new SequentialAction(
