@@ -12,9 +12,9 @@ public class RobotConstants {
     public static final Target BLUE_GOAL = new Target(3, -65, -65); //Inches
     public static final Target RED_GOAL = new Target(2, -65, 65); //Inches
     public static final double TAG_HEIGHT = 757;
-    public static double TAG_YAW_CLAMP = 2.5;// degrees
+    public static final double TAG_YAW_CLAMP = 2.5;// degrees
     public static final double TARGET_OFFSET = 300; //mm Distance behind the tag we are aiming at
-    public static double NORMAL_ANGLE_OFFSET = 2; // degrees off from normal of the tag
+    public static final double NORMAL_ANGLE_OFFSET = 2; // degrees off from normal of the tag
     public static final Pose2d RESET_POSE = new Pose2d(61, 0, Math.toRadians(180));
 
 
@@ -27,15 +27,21 @@ public class RobotConstants {
     public static double KI = 0.0005; //0.0005 for 312 motor
     public static double KD = 0.0024; //0.0005 for 312 motor
     public static double DEADBAND = 3;
-    public static double LL_HEIGHT = 315;
+    public static final double LL_HEIGHT = 315;
     public static final double LL_ANGLE = 26;
 
 
     //Intake constants
     public static final double FORWARDS_INTAKE_POWER = 1;
     public static final double BACKWARDS_INTAKE_POWER = -1;
-    public static double FIRING_POWER = 0.8;
+    public static double FRONT_FIRING_POWER = 0.8;
+    public static double BACK_FIRING_POWER_1 = 0.7;
+    public static double BACK_FIRING_POWER_2 = -0.7;
+    public static double SHOOTING_STATE_1_TIME = 0.2;
+    public static double SHOOTING_STATE_2_TIME = 0.4; //0.4 for short, 0.65 for long, need to do dynamic
 
+    //Driving constants
+    public static double DRIVING_SPEED = 1;
 
     //Outtake constants
     public static Range OUTTAKE_VELOCITY = new Range(1300, 2228); //Absolute max velocity at full power is 2380 (ticks/s)
@@ -44,7 +50,7 @@ public class RobotConstants {
     public static final double TOP_ANGLE = 44.07;
     public static final double EXTENDED_SERVO_POSITION = 0.3;
     public static double INCREASE_RATE = 300; //ticks per second per second
-    public static double MAX_INCREASE = 600; //ticks per second
+    public static double MAX_INCREASE = 0; //ticks per second
     public static final double CLOSE_OUTTAKE_SPEED = 1400;
     public static final double FAR_OUTTAKE_SPEED = 2250;
     public static double VEL_CLOSE_LIMIT = 1050; //mm 750 without POI

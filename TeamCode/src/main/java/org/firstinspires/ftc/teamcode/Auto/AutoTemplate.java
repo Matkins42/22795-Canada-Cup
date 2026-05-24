@@ -62,6 +62,8 @@ public class AutoTemplate extends LinearOpMode {
         //Create vel constraints for custom velocity, this is for linear movement (not turning) - the units are inches per second
         speedExample = new TranslationalVelConstraint(20);
 
+        shootingTimer = new ElapsedTime();
+
         //Create actions here
         Action exampleAction = packet -> {
             //Put action code here
@@ -102,6 +104,11 @@ public class AutoTemplate extends LinearOpMode {
 
         Action stopFlywheel = packet -> {
             outtake.stopFlywheel();
+            return false;
+        };
+
+        Action resetTurret = packet -> {
+            turret.turnTo(0, packet);
             return false;
         };
 
