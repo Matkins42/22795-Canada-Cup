@@ -12,9 +12,17 @@ public class RoadRunnerSubsystem {
 
     private MecanumDrive roadRunner;
     private Pose2d pose;
+    private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
 
-    public RoadRunnerSubsystem(HardwareMap hardwareMap) {
-        roadRunner = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+    //Must be initialised before driving subsystem initialisation
+    public RoadRunnerSubsystem(MecanumDrive drive) {
+        roadRunner = drive;
+        roadRunner.updatePoseEstimate();
+        pose = roadRunner.localizer.getPose();
+    }
+
+    public void setPose(Pose2d pose){
+        roadRunner.localizer.setPose(pose);
     }
 
     public void update(){
@@ -22,21 +30,35 @@ public class RoadRunnerSubsystem {
         pose = roadRunner.localizer.getPose();
     }
 
-    public double getEstimatedAngle(RobotConstants.Target target){
-        return Math.toDegrees(atan2((target.GOAL_X - pose.position.x),(target.GOAL_Y - pose.position.y)) - pose.heading.toDouble());
+    public void setTarget(RobotConstants.Target newTarget){
+        target = newTarget;
+    }
+
+    public double getEstimatedAngle(){
+        return Math.toDegrees(normaliseAngle(atan2((target.GOAL_Y - pose.position.y),(pose.position.x - target.GOAL_X)) + normaliseAngle(Math.toRadians(180) + pose.heading.toDouble())));
     }
 
     public double getY(){
-        return -1 * pose.position.y;
+        return pose.position.y;
     }
 
     public double getX(){
         return pose.position.x;
     }
     public double getHeading(){
-        return -1 * pose.heading.toDouble();
+        return pose.heading.toDouble();
+    }
+
+    private double normaliseAngle(double angle){
+        angle = angle % (2*Math.PI);
+        if (angle > Math.PI){
+            angle -= (2*Math.PI);
+        } else if(angle < -Math.PI){
+            angle += (2*Math.PI);
+        }
+        return angle;
     }
     public double getDistance(){
-        return Math.sqrt((getX() * getX()) + (getY() * getY()));
+        return 25.4 * Math.sqrt(Math.pow(target.GOAL_Y - pose.position.y, 2) + Math.pow(pose.position.x - target.GOAL_X, 2));
     }
 }

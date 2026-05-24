@@ -2,24 +2,16 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import androidx.annotation.NonNull;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
@@ -31,9 +23,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 
-@Disabled //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
-@Autonomous(name = "Template", group = "Autonomous") //Change the name here to what you want to show on the driver station
-public class AutoTemplate extends LinearOpMode {
+
+@Autonomous(name = "RedFar", group = "Autonomous") //Change the name here to what you want to show on the driver station
+public class RedFarAuto extends LinearOpMode {
 
     //Put initialization of variables here (e.g subsystems)
     private IntakeSubsystem intake;
@@ -42,36 +34,39 @@ public class AutoTemplate extends LinearOpMode {
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
 
-    private VelConstraint speedExample;
-
-    private boolean shooting = false;
     private ElapsedTime shootingTimer;
-
+    private boolean shooting;
+    private VelConstraint slow;
+    private VelConstraint medium;
+    private VelConstraint fast;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0)); //Sets the robots starting position
+        Pose2d initialPose = new Pose2d(61, 8 , Math.toRadians(180)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
-        roadRunner = new RoadRunnerSubsystem(drive);
         turret = new TurretSubsystem(hardwareMap);
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+        roadRunner = new RoadRunnerSubsystem(drive);
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.RED_GOAL); //Change this depending on what team we are
 
-        //Create vel constraints for custom velocity, this is for linear movement (not turning) - the units are inches per second
-        speedExample = new TranslationalVelConstraint(20);
+        slow = new TranslationalVelConstraint(15);
+        medium = new TranslationalVelConstraint(30);
+        fast = new TranslationalVelConstraint(50);
 
         shootingTimer = new ElapsedTime();
 
         //Create actions here
-        Action exampleAction = packet -> {
-            //Put action code here
-            return false; //False means action runs once, true loops the action
-        };
+
 
         Action collect = packet -> {
             intake.collect();
+            return false;
+        };
+
+        Action startTimer = packet -> {
+            shootingTimer.reset();
             return false;
         };
 
@@ -92,6 +87,11 @@ public class AutoTemplate extends LinearOpMode {
             }
         };
 
+        Action resetShooting = packet -> {
+            outtake.resetIncrease();
+            return false;
+        };
+
         Action stopIntake = packet -> {
             intake.stop();
             return false;
@@ -107,27 +107,66 @@ public class AutoTemplate extends LinearOpMode {
             return false;
         };
 
-        Action resetTurret = packet -> {
-            turret.turnTo(0, packet);
-            return false;
-        };
-
         Action trackTag = packet -> {
             tracking.fullTracking(packet);
             return true;
         };
 
-        //Create trajectories here
-        Action exampleTrajectory = drive.actionBuilder(initialPose)
-//                    Put trajectory code here
-//                    e.g
 
-//                    .lineToYSplineHeading(33, Math.toRadians(0))
-//                    .strafeTo(new Vector2d(44.5, 30), speedExample)  -------  set a custom speed at the end of each movement function
-//                    .turn(Math.toRadians(180))
-//                    .waitSeconds(3)
+        Action moveToRow = drive.actionBuilder(initialPose)
+                .splineTo(new Vector2d(33, 35), Math.toRadians(90),fast)
+                .strafeToLinearHeading(new Vector2d(33, 57), Math.toRadians(90),slow)
+                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(90),fast)
+                .build();
 
-                    .build();
+
+        Action moveToCorner1 = drive.actionBuilder(new Pose2d(59, 10, Math.toRadians(90)))
+                .splineTo(new Vector2d(61, 59), Math.toRadians(80),fast)
+                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(90),fast)
+                .build();
+
+        Action moveToCorner2 = drive.actionBuilder(new Pose2d(59, 10, Math.toRadians(90)))
+                .splineTo(new Vector2d(61, 59), Math.toRadians(80),fast)
+                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(90),fast)
+                .build();
+
+        Action moveToCorner3 = drive.actionBuilder(new Pose2d(59, 10, Math.toRadians(90)))
+                .splineTo(new Vector2d(61, 59), Math.toRadians(80),fast)
+                .strafeToLinearHeading(new Vector2d(59, 10), Math.toRadians(90),fast)
+                .build();
+
+        Action initialFire = new SequentialAction(
+                startFlywheel,
+                new SleepAction(3),
+                shoot
+        );
+
+        Action rowCycle = new SequentialAction(
+                collect,
+                moveToRow,
+                shoot
+        );
+
+        Action cornerCycle1 = new SequentialAction(
+                collect,
+                moveToCorner1,
+                shoot
+        );
+
+        Action cornerCycle2 = new SequentialAction(
+                collect,
+                moveToCorner2,
+                shoot
+        );
+        Action cornerCycle3 = new SequentialAction(
+                collect,
+                moveToCorner3,
+                shoot,
+                new SleepAction(3)
+        );
+
+
+
 
         // Code here runs on initialization
 
@@ -139,10 +178,16 @@ public class AutoTemplate extends LinearOpMode {
                 new ParallelAction( //Put actions that run independant of movement, e.g sensing and tracking
                         trackTag,
                         new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
-                                exampleTrajectory,
-                                exampleAction
+                                initialFire,
+                                rowCycle,
+                                collect,
+                                cornerCycle1,
+                                cornerCycle2,
+                                cornerCycle3,
+                                stopFlywheel
                         )
                 )
-        );
+        );;
     }
 }
+
