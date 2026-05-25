@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
@@ -16,6 +18,8 @@ public class TrackingSubsystem {
     private double targetTicks = 0;
     private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
     private double distance = 0;
+
+    //private ElapsedTime timer = new ElapsedTime();
 
     public TrackingSubsystem(HardwareMap hardwareMap, RoadRunnerSubsystem roadRunerSubsystem, TurretSubsystem turretSubsystem, OuttakeSubsystem outtakeSubsystem, RobotConstants.Target goal) {
         turret = turretSubsystem;
@@ -41,7 +45,8 @@ public class TrackingSubsystem {
         if(limeLight.seesTag()){
             targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
             distance = limeLight.getDistanceTrig();
-        } else{
+            //timer.reset();
+        } else{ //if(timer.seconds() >= RobotConstants.LL_BUFFER_TIME)
             targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle());
             distance = roadRunner.getDistance();
         }
@@ -99,10 +104,6 @@ public class TrackingSubsystem {
     public void adjustOuttake(){
         outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.eerp(RobotConstants.HOOD_CLOSE_LIMIT, RobotConstants.HOOD_FAR_LIMIT, distance, RobotConstants.HOOD_GRADIENT));
         outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.eerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance, RobotConstants.VEL_GRADIENT));
-    }
-
-    public boolean trackingTag(){
-        return limeLight.seesTag();
     }
 
     public double xPos(){

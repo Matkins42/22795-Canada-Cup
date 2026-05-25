@@ -17,6 +17,8 @@ public class RobotConstants {
     public static final double NORMAL_ANGLE_OFFSET = 2; // degrees off from normal of the tag
     public static final Pose2d RESET_POSE = new Pose2d(61, 0, Math.toRadians(180));
 
+    //Driving constants
+    public static double DRIVING_SPEED = 1;
 
     //Turret constants
     public static double MANUAL_ROTATION_SPEED = 0.5;
@@ -26,9 +28,11 @@ public class RobotConstants {
     public static double KP = 0.0267; //0.004 for 312 motor
     public static double KI = 0.0005; //0.0005 for 312 motor
     public static double KD = 0.0024; //0.0005 for 312 motor
+    public static final double MAX_I = 0.2;
     public static double DEADBAND = 3;
     public static final double LL_HEIGHT = 315;
     public static final double LL_ANGLE = 26;
+    //public static double LL_BUFFER_TIME = 0.01;
 
 
     //Intake constants
@@ -40,15 +44,11 @@ public class RobotConstants {
     public static double SHOOTING_STATE_1_TIME = 0.2;
     public static double SHOOTING_STATE_2_TIME = 0.4; //0.4 for short, 0.65 for long, need to do dynamic
 
-    //Driving constants
-    public static double DRIVING_SPEED = 1;
-
     //Outtake constants
     public static Range OUTTAKE_VELOCITY = new Range(1300, 2228); //Absolute max velocity at full power is 2380 (ticks/s)
     public static final Range HOOD_ANGLE = new Range(31.22, 44.07);
-    public static final double BOTTOM_ANGLE = 31.22;
-    public static final double TOP_ANGLE = 44.07;
     public static final double EXTENDED_SERVO_POSITION = 0.3;
+    public static double HOOD_DAMPENING = 0.01;
     public static double INCREASE_RATE = 300; //ticks per second per second
     public static double MAX_INCREASE = 0; //ticks per second
     public static final double CLOSE_OUTTAKE_SPEED = 1400;
@@ -89,12 +89,12 @@ public class RobotConstants {
             this.MIN = min;
             this.MAX = max;
         }
-        public double lerp(double min, double max, double t){
+        public double lerp(double min, double max, double t){ // Max must be larger than min
             t = Math.max(min, Math.min(max, t));
             return ((t-min)/(max-min) * (this.MAX - this.MIN)) + this.MIN;
         }
 
-        public double eerp(double min, double max, double t, double e){
+        public double eerp(double min, double max, double t, double e){ // Max must be larger than min
             t = Math.max(min, Math.min(max, t));
             return ((this.MAX-this.MIN)/Math.pow((max-min), e)) * Math.pow(t-min, e) + this.MIN;
         }

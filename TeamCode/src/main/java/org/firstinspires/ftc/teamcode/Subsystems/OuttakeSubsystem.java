@@ -43,6 +43,7 @@ public class OuttakeSubsystem {
 
     public void resetIncrease(){
         increase = 0;
+        dt.reset();
     }
 
     public void setVelocity(double speed){
@@ -76,7 +77,10 @@ public class OuttakeSubsystem {
     }
 
     public void setHoodAngle(double angle){
-        hood.setPosition(Math.max(0, Math.min(RobotConstants.EXTENDED_SERVO_POSITION,(angle - RobotConstants.HOOD_ANGLE.MIN) / ((RobotConstants.HOOD_ANGLE.MAX - RobotConstants.HOOD_ANGLE.MIN) / RobotConstants.EXTENDED_SERVO_POSITION))));
+        double newPos = (Math.max(0, Math.min(RobotConstants.EXTENDED_SERVO_POSITION,(angle - RobotConstants.HOOD_ANGLE.MIN) / ((RobotConstants.HOOD_ANGLE.MAX - RobotConstants.HOOD_ANGLE.MIN) / RobotConstants.EXTENDED_SERVO_POSITION))));
+        if(Math.abs(newPos - hood.getPosition()) > RobotConstants.HOOD_DAMPENING){
+            hood.setPosition(newPos);
+        }
     }
 
     public boolean reachedSpeed(){

@@ -31,4 +31,23 @@ public class DrivingSubsystem {
         leftBack.setPower((forwards - rotation + strafe) * RobotConstants.DRIVING_SPEED);
         rightBack.setPower((forwards + rotation - strafe) * RobotConstants.DRIVING_SPEED);
     }
+
+    public void normalisedDrive(double forwards, double rotation, double strafe){
+        double leftFrontPower = ((forwards - rotation - strafe) * RobotConstants.DRIVING_SPEED);
+        double rightFrontPower = ((forwards + rotation + strafe) * RobotConstants.DRIVING_SPEED);
+        double leftBackPower = ((forwards - rotation + strafe) * RobotConstants.DRIVING_SPEED);
+        double rightBackPower = ((forwards + rotation - strafe) * RobotConstants.DRIVING_SPEED);
+
+        double max = Math.max(1, Math.max(Math.abs(leftFrontPower), Math.max(Math.abs(rightFrontPower), Math.max(Math.abs(leftBackPower), Math.abs(rightBackPower)))));
+
+        leftFrontPower /= max;
+        rightFrontPower /= max;
+        leftBackPower /= max;
+        rightBackPower /= max;
+
+        leftFront.setPower(leftFrontPower);
+        rightFront.setPower(rightFrontPower);
+        leftBack.setPower(leftBackPower);
+        rightBack.setPower(rightBackPower);
+    }
 }

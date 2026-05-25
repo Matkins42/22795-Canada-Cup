@@ -28,11 +28,11 @@ public class OuttakeTesting extends LinearOpMode {
            }
            
            if(gamepad1.dpad_left){
-               outtake.setHoodAngle(RobotConstants.BOTTOM_ANGLE);
+               outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.MIN);
            } else if(gamepad1.dpad_up){
                outtake.setHoodAngle(38);
            } else if(gamepad1.dpad_right){
-               outtake.setHoodAngle(RobotConstants.TOP_ANGLE);
+               outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.MAX);
            }
 
             if(gamepad1.a){

@@ -57,21 +57,29 @@ public class HankTeleOp extends LinearOpMode {
         while(opModeIsActive()){
 
             //Set target
-            if(gamepad1.x && gamepad1.left_trigger > 0 && gamepad1.right_trigger > 0){
-                tracking.setTarget(RobotConstants.BLUE_GOAL);
-                feedback.setLight(gamepad1, RobotConstants.BLUE);
-            } else if (gamepad1.b && gamepad1.left_trigger > 0 && gamepad1.right_trigger > 0){
-                tracking.setTarget(RobotConstants.RED_GOAL);
-                feedback.setLight(gamepad1, RobotConstants.RED);
+            if(gamepad1.left_trigger > 0 && gamepad1.right_trigger > 0){
+                if(gamepad1.x){
+                    tracking.setTarget(RobotConstants.BLUE_GOAL);
+                    feedback.setLight(gamepad1, RobotConstants.BLUE);
+                } else if (gamepad1.b) {
+                    tracking.setTarget(RobotConstants.RED_GOAL);
+                    feedback.setLight(gamepad1, RobotConstants.RED);
+                }
             }
 
-            if(gamepad1.right_bumper && gamepad1.left_bumper && gamepad1.a){
-                roadRunner.setPose(RobotConstants.RESET_POSE); //Resets the entire roadrunner
-            } else if(gamepad1.right_bumper && gamepad1.left_bumper && gamepad1.y){
-                roadRunner.setPose(new Pose2d(roadRunner.getX(), roadRunner.getY(), Math.toRadians(180))); //Resets the roadrunner heading
+
+            if(gamepad1.right_bumper && gamepad1.left_bumper) {
+                if (gamepad1.a) {
+                    roadRunner.update();
+                    roadRunner.setPose(RobotConstants.RESET_POSE); //Resets the entire roadrunner
+                } else if (gamepad1.y) {
+                    roadRunner.update();
+                    roadRunner.setPose(new Pose2d(roadRunner.getX(), roadRunner.getY(), Math.toRadians(180))); //Resets the roadrunner heading
+                }
             }
+
             //Driving code
-            driveTrain.drive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
+            driveTrain.normalisedDrive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
 
             //Set tracking mode
             if(gamepad2.dpad_left){
@@ -141,7 +149,7 @@ public class HankTeleOp extends LinearOpMode {
             }
 
             //Vibrates when ready to shoot
-            if(tracking.trackingTag() && turret.isAiming() && outtake.reachedSpeed()){
+            if(tracking.seesTag() && turret.isAiming() && outtake.reachedSpeed()){
                 feedback.rumble(gamepad1);
                 feedback.rumble(gamepad2);
             }

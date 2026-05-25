@@ -23,6 +23,7 @@ public class TurretSubsystem {
         turret = hardwareMap.get(DcMotor.class, "turret");
         turret.setDirection(DcMotor.Direction.REVERSE);
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         time = new ElapsedTime();
@@ -34,12 +35,11 @@ public class TurretSubsystem {
 
     public void turnTo(double target, TelemetryPacket packet){
         target = Math.max(degreesToTicks(RobotConstants.TURRET_RANGE/-2), Math.min(degreesToTicks(RobotConstants.TURRET_RANGE/2), target));
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         position = turret.getCurrentPosition();
         error = target - position;
-        dt = Math.max(time.seconds(), 0.001);
+        dt = Math.min(0.5, Math.max(time.seconds(), 0.001));
 
-        integral += error * dt;
+        integral += Math.min(RobotConstants.MAX_I, Math.max(error * dt, -RobotConstants.MAX_I));
         derivative = -(position - lastPosition) / dt;
 
         power = Math.max(-1, Math.min(1, (RobotConstants.KP * error) + (RobotConstants.KI * integral) + (RobotConstants.KD * derivative))); //Calculates turning power and limits between 1 and -1
@@ -68,13 +68,11 @@ public class TurretSubsystem {
     }
 
     public void turnClockwise(double input){
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setPower(input * RobotConstants.MANUAL_ROTATION_SPEED);
     }
 
     public void turnCounterClockwise(double input){
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setPower(-input);
+        turret.setPower(-input * RobotConstants.MANUAL_ROTATION_SPEED);
     }
 
     public int degreesToTicks(double degrees){
