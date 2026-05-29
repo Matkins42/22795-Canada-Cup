@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
+import com.acmerobotics.roadrunner.AccelConstraint;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
@@ -30,6 +34,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.RoadRunnerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
+import java.util.Arrays;
+
 
 @Disabled //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
 @Autonomous(name = "Template", group = "Autonomous") //Change the name here to what you want to show on the driver station
@@ -43,7 +49,7 @@ public class AutoTemplate extends LinearOpMode {
     private RoadRunnerSubsystem roadRunner;
 
     private VelConstraint speedExample;
-
+    AccelConstraint accelExample;
     private boolean shooting = false;
     private ElapsedTime shootingTimer;
 
@@ -59,8 +65,13 @@ public class AutoTemplate extends LinearOpMode {
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
 
-        //Create vel constraints for custom velocity, this is for linear movement (not turning) - the units are inches per second
-        speedExample = new TranslationalVelConstraint(20);
+        //Sets roadrunner movement parameters
+        speedExample = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(30), //inches/s
+                new AngularVelConstraint(Math.toRadians(180)) // rad/s
+        ));
+
+        accelExample = new ProfileAccelConstraint(-30, 30); // inches/s^2
 
         shootingTimer = new ElapsedTime();
 
@@ -121,15 +132,14 @@ public class AutoTemplate extends LinearOpMode {
         Action exampleTrajectory = drive.actionBuilder(initialPose)
 //                    Put trajectory code here
 //                    e.g
-
-//                    .lineToYSplineHeading(33, Math.toRadians(0))
-//                    .strafeTo(new Vector2d(44.5, 30), speedExample)  -------  set a custom speed at the end of each movement function
-//                    .turn(Math.toRadians(180))
-//                    .waitSeconds(3)
-
+                    .lineToYSplineHeading(33, Math.toRadians(0))
+                    .strafeTo(new Vector2d(44.5, 30), speedExample, accelExample) // -------  set a custom speed and acceleration at the end of each movement function
+                    .turn(Math.toRadians(180))
+                    .waitSeconds(3)
                     .build();
 
-        // Code here runs on initialization
+        tracking.setScaling(false);
+        tracking.setOuttake(45, 1400, 0.3);
 
         waitForStart();
 

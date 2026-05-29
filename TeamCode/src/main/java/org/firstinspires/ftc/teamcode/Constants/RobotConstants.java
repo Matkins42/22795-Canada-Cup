@@ -16,10 +16,10 @@ public class RobotConstants {
     public static final double TARGET_OFFSET = 300; //mm Distance behind the tag we are aiming at
     public static final double NORMAL_ANGLE_OFFSET = 2; // degrees off from normal of the tag
     public static final Pose2d RESET_POSE = new Pose2d(61, 0, Math.toRadians(180));
-    public static Range DISTANCE_CLOSE_CLAMP = new Range(0, 1800);
-    public static Range DISTANCE_MEDIUM_CLAMP = new Range(1800, 2400);
-    public static Range DISTANCE_FAR_CLAMP = new Range(2400, 5000);
-    public static Range DISTANCE_NO_CLAMP = new Range(0, 5000);
+    public static final Range DISTANCE_CLOSE_CLAMP = new Range(0, 1800);
+    public static final Range DISTANCE_MEDIUM_CLAMP = new Range(1800, 2400);
+    public static final Range DISTANCE_FAR_CLAMP = new Range(2400, 5000);
+    public static final Range DISTANCE_NO_CLAMP = new Range(0, 5000);
 
     //Driving constants
     public static double DRIVING_SPEED = 0.85;
@@ -29,11 +29,11 @@ public class RobotConstants {
     public static double TURRET_RANGE = 360;
     public static final int TICKS_PER_ROTATION = 146; //538 312rpm
     public static final double GEAR_RATIO = (double) 51 / 24;
-    public static double KP = 0.0267; //0.004 for 312 motor
+    public static double KP = 0.0268; //0.004 for 312 motor
     public static double KI = 0.0005; //0.0005 for 312 motor
-    public static double KD = 0.0024; //0.0005 for 312 motor
+    public static double KD = 0.0029; //0.0005 for 312 motor
     public static final double MAX_I = 0.2;
-    public static double DEADBAND = 3;
+    public static double DEADBAND = 2;
     public static final double LL_HEIGHT = 315;
     public static final double LL_ANGLE = 26;
     //public static double LL_BUFFER_TIME = 0.01;
@@ -48,7 +48,7 @@ public class RobotConstants {
     public static double SHOOTING_STATE_1_TIME = 0.1;
     public static double SHOOTING_STATE_2_MIN_TIME = 0.075; //0.4 for short, 0.65 for long, need to do dynamic
     public static final Range SPACING_TIME = new Range(0.3, 0.6);
-    public static double SPACING_GRADIENT = 0.9;
+    public static double SPACING_GRADIENT = 0.82;
     public static boolean SET_SPACING_TIME = true;
 
     //Outtake constants

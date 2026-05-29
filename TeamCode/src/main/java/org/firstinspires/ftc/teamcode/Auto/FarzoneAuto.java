@@ -175,9 +175,6 @@ public class FarzoneAuto extends LinearOpMode {
 
          );
 
-
-
-
         // Code here runs on initialization
 
         waitForStart();
