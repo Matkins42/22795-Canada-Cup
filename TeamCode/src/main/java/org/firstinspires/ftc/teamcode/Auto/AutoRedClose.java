@@ -43,11 +43,11 @@ public class AutoRedClose extends LinearOpMode {
         Pose2d initialPose = new Pose2d(-50, 50, Math.toRadians(135)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
-        intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
+        intake = new IntakeSubsystem(hardwareMap, outtake);
         turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.RED_GOAL); //Change this depending on what team we are
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, RobotConstants.RED_GOAL); //Change this depending on what team we are
 
         fast = new TranslationalVelConstraint(75);
         medium = new TranslationalVelConstraint(25);

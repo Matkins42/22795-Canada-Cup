@@ -53,11 +53,11 @@ public class AutoTemplate extends LinearOpMode {
         Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
-        intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
-        roadRunner = new RoadRunnerSubsystem(drive);
+        intake = new IntakeSubsystem(hardwareMap, outtake);
         turret = new TurretSubsystem(hardwareMap);
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+        roadRunner = new RoadRunnerSubsystem(drive);
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
 
         //Create vel constraints for custom velocity, this is for linear movement (not turning) - the units are inches per second
         speedExample = new TranslationalVelConstraint(20);

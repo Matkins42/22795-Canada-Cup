@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 public class TrackingSubsystem {
 
     private TurretSubsystem turret;
+    private IntakeSubsystem intake;
     private OuttakeSubsystem outtake;
     private LimeLightSubsystem limeLight;
     private RoadRunnerSubsystem roadRunner;
@@ -18,11 +19,14 @@ public class TrackingSubsystem {
     private double targetTicks = 0;
     private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
     private double distance = 0;
+    private double minDistance = 0;
+    private double maxDistance = 5000;
 
     //private ElapsedTime timer = new ElapsedTime();
 
-    public TrackingSubsystem(HardwareMap hardwareMap, RoadRunnerSubsystem roadRunerSubsystem, TurretSubsystem turretSubsystem, OuttakeSubsystem outtakeSubsystem, RobotConstants.Target goal) {
+    public TrackingSubsystem(HardwareMap hardwareMap, RoadRunnerSubsystem roadRunerSubsystem, TurretSubsystem turretSubsystem, IntakeSubsystem intakeSubsystem, OuttakeSubsystem outtakeSubsystem, RobotConstants.Target goal) {
         turret = turretSubsystem;
+        intake = intakeSubsystem;
         outtake = outtakeSubsystem;
         limeLight = new LimeLightSubsystem(hardwareMap);
         roadRunner = roadRunerSubsystem;
@@ -51,6 +55,8 @@ public class TrackingSubsystem {
             distance = roadRunner.getDistance();
         }
 
+        distance = Math.min(maxDistance, Math.max(distance, minDistance));
+
         if (packet != null){
             packet.put("limeLight", turret.degreesToTicks(limeLight.getXAngle()));
             packet.put("targetTicks", targetTicks);
@@ -76,6 +82,8 @@ public class TrackingSubsystem {
             targetTicks = turret.getPosition();
         }
 
+        distance = Math.min(maxDistance, Math.max(distance, minDistance));
+
         if (packet != null){
             packet.put("limeLight", turret.degreesToTicks(limeLight.getXAngle()));
             packet.put("targetTicks", targetTicks);
@@ -92,6 +100,8 @@ public class TrackingSubsystem {
         targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle());
         distance = roadRunner.getDistance();
 
+        distance = Math.min(maxDistance, Math.max(distance, minDistance));
+
         if (packet != null){
             packet.put("targetTicks", targetTicks);
         }
@@ -104,6 +114,7 @@ public class TrackingSubsystem {
     public void adjustOuttake(){
         outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.eerp(RobotConstants.HOOD_CLOSE_LIMIT, RobotConstants.HOOD_FAR_LIMIT, distance, RobotConstants.HOOD_GRADIENT));
         outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.eerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance, RobotConstants.VEL_GRADIENT));
+        intake.setSpacingTime(RobotConstants.SPACING_TIME.eerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance, RobotConstants.SPACING_GRADIENT));
     }
 
     public double xPos(){
@@ -122,5 +133,10 @@ public class TrackingSubsystem {
 
     public boolean seesTag(){
         return limeLight.seesTag();
+    }
+
+    public void setDistanceClamps(double min, double max){
+        minDistance = min;
+        maxDistance = max;
     }
 }

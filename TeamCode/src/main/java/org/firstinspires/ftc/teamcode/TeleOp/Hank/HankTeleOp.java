@@ -36,20 +36,19 @@ public class HankTeleOp extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         TelemetryPacket packet = new TelemetryPacket();
 
-
-        intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
+        intake = new IntakeSubsystem(hardwareMap, outtake);
         turret = new TurretSubsystem(hardwareMap);
         feedback = new FeedbackSubsystem();
 
         roadRunner = new RoadRunnerSubsystem(new MecanumDrive(hardwareMap, new Pose2d(0, 0, Math.toRadians(180))));
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL);
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, RobotConstants.BLUE_GOAL);
         //NOTE: Driving subsystem must be initialised after Roadrunner/Tracking subsystem
         //else controller scheme is messed up
         driveTrain = new DrivingSubsystem(hardwareMap);
 
         //Starting lights
-        feedback.setLight(gamepad1, RobotConstants.BLUE);
+        feedback.setLight(gamepad1, RobotConstants.PINK);
         feedback.setLight(gamepad2, RobotConstants.GREEN);
 
         waitForStart();
@@ -60,13 +59,10 @@ public class HankTeleOp extends LinearOpMode {
             if(gamepad1.left_trigger > 0 && gamepad1.right_trigger > 0){
                 if(gamepad1.x){
                     tracking.setTarget(RobotConstants.BLUE_GOAL);
-                    feedback.setLight(gamepad1, RobotConstants.BLUE);
                 } else if (gamepad1.b) {
                     tracking.setTarget(RobotConstants.RED_GOAL);
-                    feedback.setLight(gamepad1, RobotConstants.RED);
                 }
             }
-
 
             if(gamepad1.right_bumper && gamepad1.left_bumper) {
                 if (gamepad1.a) {
@@ -76,6 +72,17 @@ public class HankTeleOp extends LinearOpMode {
                     roadRunner.update();
                     roadRunner.setPose(new Pose2d(roadRunner.getX(), roadRunner.getY(), Math.toRadians(180))); //Resets the roadrunner heading
                 }
+            }
+
+            if(gamepad1.dpad_right){
+                tracking.setDistanceClamps(0, RobotConstants.DISTANCE_CLOSE_CLAMP);
+                feedback.setLight(gamepad1, RobotConstants.GREEN);
+            }else if(gamepad1.dpad_up){
+                tracking.setDistanceClamps(0, 5000);
+                feedback.setLight(gamepad1, RobotConstants.PINK);
+            }else if(gamepad1.dpad_left){
+                tracking.setDistanceClamps(RobotConstants.DISTANCE_FAR_CLAMP, 5000);
+                feedback.setLight(gamepad1, RobotConstants.ORANGE);
             }
 
             //Driving code
@@ -111,10 +118,12 @@ public class HankTeleOp extends LinearOpMode {
 
             //Setting Manual Outtake Speed
             if(trackingMode.equals("manual")){
-                if(gamepad2.x)
+                if(gamepad2.x) {
                     manualOuttakeSpeed = (RobotConstants.CLOSE_OUTTAKE_SPEED);
-                else if(gamepad2.b){
+                    intake.setSpacingTime(0.4);
+                }else if(gamepad2.b){
                     manualOuttakeSpeed = (RobotConstants.FAR_OUTTAKE_SPEED);
+                    intake.setSpacingTime(0.6);
                 }
                 outtake.setVelocity(manualOuttakeSpeed);
                 outtake.update();

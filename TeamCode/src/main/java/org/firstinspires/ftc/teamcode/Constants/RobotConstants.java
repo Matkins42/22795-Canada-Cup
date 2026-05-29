@@ -16,6 +16,8 @@ public class RobotConstants {
     public static final double TARGET_OFFSET = 300; //mm Distance behind the tag we are aiming at
     public static final double NORMAL_ANGLE_OFFSET = 2; // degrees off from normal of the tag
     public static final Pose2d RESET_POSE = new Pose2d(61, 0, Math.toRadians(180));
+    public static double DISTANCE_CLOSE_CLAMP = 1800;
+    public static double DISTANCE_FAR_CLAMP = 1950;
 
     //Driving constants
     public static double DRIVING_SPEED = 1;
@@ -38,14 +40,17 @@ public class RobotConstants {
     //Intake constants
     public static final double FORWARDS_INTAKE_POWER = 1;
     public static final double BACKWARDS_INTAKE_POWER = -1;
-    public static double FRONT_FIRING_POWER = 0.8;
-    public static double BACK_FIRING_POWER_1 = 0.7;
-    public static double BACK_FIRING_POWER_2 = -0.7;
-    public static double SHOOTING_STATE_1_TIME = 0.2;
-    public static double SHOOTING_STATE_2_TIME = 0.4; //0.4 for short, 0.65 for long, need to do dynamic
+    public static double FRONT_FIRING_POWER = 0.85;
+    public static double BACK_FIRING_POWER_1 = 0.75;
+    public static double BACK_FIRING_POWER_2 = -0.75;
+    public static double SHOOTING_STATE_1_TIME = 0.1;
+    public static double SHOOTING_STATE_2_MIN_TIME = 0.075; //0.4 for short, 0.65 for long, need to do dynamic
+    public static final Range SPACING_TIME = new Range(0.3, 0.6);
+    public static double SPACING_GRADIENT = 0.9;
+    public static boolean SET_SPACING_TIME = true;
 
     //Outtake constants
-    public static Range OUTTAKE_VELOCITY = new Range(1300, 2228); //Absolute max velocity at full power is 2380 (ticks/s)
+    public static Range OUTTAKE_VELOCITY = new Range(1280, 2180); //Absolute max velocity at full power is 2380 (ticks/s)  Old values (1300, 2228)
     public static final Range HOOD_ANGLE = new Range(31.22, 44.07);
     public static final double EXTENDED_SERVO_POSITION = 0.3;
     public static double HOOD_DAMPENING = 0.01;
@@ -55,10 +60,11 @@ public class RobotConstants {
     public static final double FAR_OUTTAKE_SPEED = 2250;
     public static double VEL_CLOSE_LIMIT = 1050; //mm 750 without POI
     public static double VEL_FAR_LIMIT = 4100; //mm 3800 without POI
-    public static double VEL_GRADIENT = 1.33;
+    public static double VEL_GRADIENT = 1.26; //was 1.33
     public static double HOOD_CLOSE_LIMIT = 1050; //mm 750 without POI
     public static double HOOD_FAR_LIMIT = 4100; //mm 3800 without POI
     public static double HOOD_GRADIENT = 0.65;
+    public static double SPEED_TARGET_RANGE = 20;
 
 
     //Feedback Constants
@@ -68,6 +74,8 @@ public class RobotConstants {
     public static final double[] YELLOW = {255, 255, 0};
     public static final double[] GREEN = {0, 255, 0};
     public static final double[] PURPLE = {255, 0, 255};
+    public static final double[] PINK = {255, 8, 8};
+    public static final double[] ORANGE = {255, 15, 0};
 
     public static class Target {
         public final int PIPELINE;

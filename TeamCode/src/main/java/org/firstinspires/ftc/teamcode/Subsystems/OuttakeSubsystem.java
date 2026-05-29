@@ -84,7 +84,7 @@ public class OuttakeSubsystem {
     }
 
     public boolean reachedSpeed(){
-        return (flywheel.getVelocity() >= targetSpeed - 20 && flywheel.getVelocity() <= targetSpeed + 20);
+        return (flywheel.getVelocity() >= targetSpeed - RobotConstants.SPEED_TARGET_RANGE && flywheel.getVelocity() <= targetSpeed + RobotConstants.SPEED_TARGET_RANGE);
     }
 
     public double getHoodPosition(){
