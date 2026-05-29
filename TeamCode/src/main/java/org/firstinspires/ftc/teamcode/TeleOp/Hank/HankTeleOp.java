@@ -75,14 +75,17 @@ public class HankTeleOp extends LinearOpMode {
             }
 
             if(gamepad1.dpad_right){
-                tracking.setDistanceClamps(0, RobotConstants.DISTANCE_CLOSE_CLAMP);
+                tracking.setDistanceClamps(RobotConstants.DISTANCE_CLOSE_CLAMP.MIN, RobotConstants.DISTANCE_CLOSE_CLAMP.MAX);
                 feedback.setLight(gamepad1, RobotConstants.GREEN);
-            }else if(gamepad1.dpad_up){
-                tracking.setDistanceClamps(0, 5000);
+            }else if(gamepad1.dpad_down){
+                tracking.setDistanceClamps(RobotConstants.DISTANCE_MEDIUM_CLAMP.MIN, RobotConstants.DISTANCE_MEDIUM_CLAMP.MAX);
                 feedback.setLight(gamepad1, RobotConstants.PINK);
             }else if(gamepad1.dpad_left){
-                tracking.setDistanceClamps(RobotConstants.DISTANCE_FAR_CLAMP, 5000);
+                tracking.setDistanceClamps(RobotConstants.DISTANCE_FAR_CLAMP.MIN, RobotConstants.DISTANCE_FAR_CLAMP.MAX);
                 feedback.setLight(gamepad1, RobotConstants.ORANGE);
+            }else if(gamepad1.dpad_up) {
+                tracking.setDistanceClamps(RobotConstants.DISTANCE_NO_CLAMP.MIN, RobotConstants.DISTANCE_NO_CLAMP.MAX);
+                feedback.setLight(gamepad1, RobotConstants.PINK);
             }
 
             //Driving code

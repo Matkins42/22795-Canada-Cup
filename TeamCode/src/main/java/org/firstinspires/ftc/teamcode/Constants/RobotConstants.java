@@ -16,11 +16,13 @@ public class RobotConstants {
     public static final double TARGET_OFFSET = 300; //mm Distance behind the tag we are aiming at
     public static final double NORMAL_ANGLE_OFFSET = 2; // degrees off from normal of the tag
     public static final Pose2d RESET_POSE = new Pose2d(61, 0, Math.toRadians(180));
-    public static double DISTANCE_CLOSE_CLAMP = 1800;
-    public static double DISTANCE_FAR_CLAMP = 1950;
+    public static Range DISTANCE_CLOSE_CLAMP = new Range(0, 1800);
+    public static Range DISTANCE_MEDIUM_CLAMP = new Range(1800, 2400);
+    public static Range DISTANCE_FAR_CLAMP = new Range(2400, 5000);
+    public static Range DISTANCE_NO_CLAMP = new Range(0, 5000);
 
     //Driving constants
-    public static double DRIVING_SPEED = 1;
+    public static double DRIVING_SPEED = 0.85;
 
     //Turret constants
     public static double MANUAL_ROTATION_SPEED = 0.5;
@@ -74,8 +76,9 @@ public class RobotConstants {
     public static final double[] YELLOW = {255, 255, 0};
     public static final double[] GREEN = {0, 255, 0};
     public static final double[] PURPLE = {255, 0, 255};
-    public static final double[] PINK = {255, 8, 8};
-    public static final double[] ORANGE = {255, 15, 0};
+    public static final double[] PINK = {255, 3, 3};
+    public static final double[] ORANGE = {255, 3, 0};
+    public static final double[] LIGHT_BLUE = {65, 65, 255};
 
     public static class Target {
         public final int PIPELINE;

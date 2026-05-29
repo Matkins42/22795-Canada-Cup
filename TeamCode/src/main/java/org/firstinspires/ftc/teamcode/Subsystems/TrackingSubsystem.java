@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
 public class TrackingSubsystem {
-
     private TurretSubsystem turret;
     private IntakeSubsystem intake;
     private OuttakeSubsystem outtake;
@@ -19,8 +18,10 @@ public class TrackingSubsystem {
     private double targetTicks = 0;
     private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
     private double distance = 0;
-    private double minDistance = 0;
-    private double maxDistance = 5000;
+    private double minDistance = RobotConstants.DISTANCE_NO_CLAMP.MIN;
+    private double maxDistance = RobotConstants.DISTANCE_NO_CLAMP.MAX;
+
+    private boolean dynamicScaling = true;
 
     //private ElapsedTime timer = new ElapsedTime();
 
@@ -37,6 +38,10 @@ public class TrackingSubsystem {
         target = goal;
         limeLight.switchPipeline(target.PIPELINE);
         roadRunner.setTarget(target);
+    }
+
+    public void setScaling(boolean scaling){
+        dynamicScaling = scaling;
     }
 
     public double getDistance(){
@@ -68,7 +73,9 @@ public class TrackingSubsystem {
         }
 
         turret.turnTo(targetTicks, packet);
-        adjustOuttake();
+        if (dynamicScaling) {
+            adjustOuttake();
+        }
         outtake.update();
     }
 
@@ -90,7 +97,9 @@ public class TrackingSubsystem {
         }
 
         turret.turnTo(targetTicks, packet);
-        adjustOuttake();
+        if (dynamicScaling) {
+            adjustOuttake();
+        }
         outtake.update();
     }
 
@@ -107,7 +116,9 @@ public class TrackingSubsystem {
         }
 
         turret.turnTo(targetTicks, packet);
-        adjustOuttake();
+        if (dynamicScaling) {
+            adjustOuttake();
+        }
         outtake.update();
     }
 
@@ -115,6 +126,12 @@ public class TrackingSubsystem {
         outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.eerp(RobotConstants.HOOD_CLOSE_LIMIT, RobotConstants.HOOD_FAR_LIMIT, distance, RobotConstants.HOOD_GRADIENT));
         outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.eerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance, RobotConstants.VEL_GRADIENT));
         intake.setSpacingTime(RobotConstants.SPACING_TIME.eerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance, RobotConstants.SPACING_GRADIENT));
+    }
+
+    public void setOuttake(double angle, double velocity, double spacing){
+        outtake.setHoodAngle(angle);
+        outtake.setVelocity(velocity);
+        intake.setSpacingTime(spacing);
     }
 
     public double xPos(){
