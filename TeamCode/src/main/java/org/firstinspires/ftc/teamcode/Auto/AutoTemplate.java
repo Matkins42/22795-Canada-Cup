@@ -52,7 +52,7 @@ public class AutoTemplate extends LinearOpMode {
     AccelConstraint accelExample;
     private boolean shooting = false;
     private ElapsedTime shootingTimer;
-
+    private boolean track = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -79,6 +79,21 @@ public class AutoTemplate extends LinearOpMode {
         Action exampleAction = packet -> {
             //Put action code here
             return false; //False means action runs once, true loops the action
+        };
+
+        Action trackingOn = packet -> {
+            track = true;
+            return false;
+        };
+
+        Action trackingOff = packet -> {
+            track = false;
+            return false;
+        };
+
+        Action resetTurret = packet -> {
+            turret.turnTo(0, packet);
+            return false;
         };
 
         Action collect = packet -> {
@@ -118,13 +133,10 @@ public class AutoTemplate extends LinearOpMode {
             return false;
         };
 
-        Action resetTurret = packet -> {
-            turret.turnTo(0, packet);
-            return false;
-        };
-
         Action trackTag = packet -> {
-            tracking.fullTracking(packet);
+            if(track){
+                tracking.fullTracking(packet);
+            }
             return true;
         };
 
@@ -150,7 +162,9 @@ public class AutoTemplate extends LinearOpMode {
                         trackTag,
                         new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
                                 exampleTrajectory,
-                                exampleAction
+                                exampleAction,
+                                trackingOff,
+                                resetTurret
                         )
                 )
         );
