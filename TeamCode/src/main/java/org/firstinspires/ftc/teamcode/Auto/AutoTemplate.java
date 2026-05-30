@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Storage.AutoStorage;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.RoadRunnerSubsystem;
@@ -47,12 +48,13 @@ public class AutoTemplate extends LinearOpMode {
     private TurretSubsystem turret;
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
-
+    private RobotConstants.Target goal = RobotConstants.BLUE_GOAL;
     private VelConstraint speedExample;
     AccelConstraint accelExample;
     private boolean shooting = false;
     private ElapsedTime shootingTimer;
     private boolean track = true;
+    private double targetAngle = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,7 +65,7 @@ public class AutoTemplate extends LinearOpMode {
         intake = new IntakeSubsystem(hardwareMap, outtake);
         turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal); //Change this depending on what team we are
 
         //Sets roadrunner movement parameters
         speedExample = new MinVelConstraint(Arrays.asList(
@@ -92,7 +94,8 @@ public class AutoTemplate extends LinearOpMode {
         };
 
         Action resetTurret = packet -> {
-            turret.turnTo(0, packet);
+            track = false;
+            targetAngle = 0;
             return false;
         };
 
@@ -133,9 +136,11 @@ public class AutoTemplate extends LinearOpMode {
             return false;
         };
 
-        Action trackTag = packet -> {
+        Action updateTurret = packet -> {
             if(track){
                 tracking.fullTracking(packet);
+            } else{
+                turret.turnTo(turret.degreesToTicks(targetAngle), null);
             }
             return true;
         };
@@ -159,7 +164,7 @@ public class AutoTemplate extends LinearOpMode {
 
         Actions.runBlocking(
                 new ParallelAction( //Put actions that run independant of movement, e.g sensing and tracking
-                        trackTag,
+                        updateTurret,
                         new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
                                 exampleTrajectory,
                                 exampleAction,
@@ -168,5 +173,7 @@ public class AutoTemplate extends LinearOpMode {
                         )
                 )
         );
+        AutoStorage.autoEndPose = drive.localizer.getPose();
+        AutoStorage.goal = goal;
     }
 }
