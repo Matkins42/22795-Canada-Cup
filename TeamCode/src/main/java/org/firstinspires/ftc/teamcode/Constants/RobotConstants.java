@@ -47,7 +47,7 @@ public class RobotConstants {
     public static double BACK_FIRING_POWER_2 = -0.75;
     public static double SHOOTING_STATE_1_TIME = 0.1;
     public static double SHOOTING_STATE_2_MIN_TIME = 0.075; //0.4 for short, 0.65 for long, need to do dynamic
-    public static final Range SPACING_TIME = new Range(0.3, 0.6);
+    public static final Range SPACING_TIME = new Range(0.35, 0.62);
     public static double SPACING_GRADIENT = 0.82;
     public static boolean SET_SPACING_TIME = true;
 
