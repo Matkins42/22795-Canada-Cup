@@ -29,6 +29,11 @@ public class TurretSubsystem {
         time = new ElapsedTime();
     }
 
+    public void resetTurret(){
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     public double getPosition(){
         return turret.getCurrentPosition();
     }

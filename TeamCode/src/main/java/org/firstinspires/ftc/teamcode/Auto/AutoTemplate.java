@@ -49,12 +49,13 @@ public class AutoTemplate extends LinearOpMode {
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
     private RobotConstants.Target goal = RobotConstants.BLUE_GOAL;
-    private VelConstraint speedExample;
-    AccelConstraint accelExample;
     private boolean shooting = false;
     private ElapsedTime shootingTimer;
     private boolean track = true;
     private double targetAngle = 0;
+
+    private VelConstraint speedExample;
+    private AccelConstraint accelExample;
 
     @Override
     public void runOpMode() throws InterruptedException {

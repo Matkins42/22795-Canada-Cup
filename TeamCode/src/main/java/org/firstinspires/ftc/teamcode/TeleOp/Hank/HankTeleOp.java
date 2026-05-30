@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Storage.AutoStorage;
 import org.firstinspires.ftc.teamcode.Subsystems.DrivingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.FeedbackSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
@@ -41,8 +42,8 @@ public class HankTeleOp extends LinearOpMode {
         turret = new TurretSubsystem(hardwareMap);
         feedback = new FeedbackSubsystem();
 
-        roadRunner = new RoadRunnerSubsystem(new MecanumDrive(hardwareMap, new Pose2d(0, 0, Math.toRadians(180))));
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, RobotConstants.BLUE_GOAL);
+        roadRunner = new RoadRunnerSubsystem(new MecanumDrive(hardwareMap, AutoStorage.autoEndPose));
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, AutoStorage.goal);
         //NOTE: Driving subsystem must be initialised after Roadrunner/Tracking subsystem
         //else controller scheme is messed up
         driveTrain = new DrivingSubsystem(hardwareMap);
