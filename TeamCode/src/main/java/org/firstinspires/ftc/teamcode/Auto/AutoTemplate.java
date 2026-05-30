@@ -78,10 +78,17 @@ public class AutoTemplate extends LinearOpMode {
 
         shootingTimer = new ElapsedTime();
 
+        AutoStorage.goal = goal;
+
         //Create actions here
         Action exampleAction = packet -> {
             //Put action code here
             return false; //False means action runs once, true loops the action
+        };
+
+        Action savePosition = packet -> {
+            AutoStorage.autoEndPose = drive.localizer.getPose();
+            return true;
         };
 
         Action trackingOn = packet -> {
@@ -166,6 +173,7 @@ public class AutoTemplate extends LinearOpMode {
         Actions.runBlocking(
                 new ParallelAction( //Put actions that run independant of movement, e.g sensing and tracking
                         updateTurret,
+                        savePosition,
                         new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
                                 exampleTrajectory,
                                 exampleAction,
@@ -174,7 +182,5 @@ public class AutoTemplate extends LinearOpMode {
                         )
                 )
         );
-        AutoStorage.autoEndPose = drive.localizer.getPose();
-        AutoStorage.goal = goal;
     }
 }
