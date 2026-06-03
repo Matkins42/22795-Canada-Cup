@@ -59,6 +59,6 @@ public class RoadRunnerSubsystem {
         return angle;
     }
     public double getDistance(){
-        return 25.4 * Math.sqrt(Math.pow(target.GOAL_Y - pose.position.y, 2) + Math.pow(pose.position.x - target.GOAL_X, 2));
+        return (25.4 * Math.sqrt(Math.pow(target.GOAL_Y - pose.position.y, 2) + Math.pow(pose.position.x - target.GOAL_X, 2))) + RobotConstants.RR_DISTANCE_OFFSET;
     }
 }

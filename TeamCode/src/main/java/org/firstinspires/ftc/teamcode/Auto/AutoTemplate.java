@@ -48,7 +48,9 @@ public class AutoTemplate extends LinearOpMode {
     private TurretSubsystem turret;
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
-    private RobotConstants.Target goal = RobotConstants.BLUE_GOAL;
+
+    private RobotConstants.Target goal = RobotConstants.BLUE_GOAL; //Change this depending on what team we are
+
     private boolean shooting = false;
     private ElapsedTime shootingTimer;
     private boolean track = true;
@@ -66,7 +68,7 @@ public class AutoTemplate extends LinearOpMode {
         intake = new IntakeSubsystem(hardwareMap, outtake);
         turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal); //Change this depending on what team we are
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal);
 
         //Sets roadrunner movement parameters
         speedExample = new MinVelConstraint(Arrays.asList(
@@ -79,6 +81,7 @@ public class AutoTemplate extends LinearOpMode {
         shootingTimer = new ElapsedTime();
 
         AutoStorage.goal = goal;
+        AutoStorage.auto = true;
 
         //Create actions here
         Action exampleAction = packet -> {
@@ -164,7 +167,7 @@ public class AutoTemplate extends LinearOpMode {
                     .build();
 
         tracking.setScaling(false);
-        tracking.setOuttake(45, 1400, 0.3);
+        tracking.setOuttake(45, 1400, 0.35);
 
         waitForStart();
 

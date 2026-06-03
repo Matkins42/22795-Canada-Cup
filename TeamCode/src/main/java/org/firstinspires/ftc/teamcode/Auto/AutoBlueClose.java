@@ -1,25 +1,31 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Storage.AutoStorage;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.RoadRunnerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
+
+import java.util.Arrays;
 
 
 @Autonomous(name = "BlueClose", group = "Autonomous") //Change the name here to what you want to show on the driver station
@@ -31,36 +37,79 @@ public class AutoBlueClose extends LinearOpMode {
     private TurretSubsystem turret;
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
+
+    private RobotConstants.Target goal = RobotConstants.BLUE_GOAL;
+
     private VelConstraint ultrafast;
     private VelConstraint fast;
     private VelConstraint medium;
     private VelConstraint slow;
+    private AccelConstraint highAccel;
     private boolean shooting = false;
     private ElapsedTime shootingTimer;
-
+    private boolean track = true;
+    private double targetAngle = 0;
+    private Pose2d shootingPos = new Pose2d(-10.5, -14, Math.toRadians(-60));
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(-50, -50, Math.toRadians(225)); //Sets the robots starting position
+        Pose2d initialPose = new Pose2d(-52.5, -47.5, Math.toRadians(-126.5)); // -50, 50, Math.toRadians(135)
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         outtake = new OuttakeSubsystem(hardwareMap);
         intake = new IntakeSubsystem(hardwareMap, outtake);
         turret = new TurretSubsystem(hardwareMap);
         roadRunner = new RoadRunnerSubsystem(drive);
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, RobotConstants.RED_GOAL); //Change this depending on what team we are
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal);
 
-        fast = new TranslationalVelConstraint(60);
-        medium = new TranslationalVelConstraint(25);
-        slow = new TranslationalVelConstraint(17);
-        ultrafast = new TranslationalVelConstraint(50);
+        fast = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(75), //inches/s
+                new AngularVelConstraint(Math.toRadians(270)) // rad/s
+        ));
+        medium = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(30), //inches/s
+                new AngularVelConstraint(Math.toRadians(180)) // rad/s
+        ));
+        slow = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(20), //inches/s
+                new AngularVelConstraint(Math.toRadians(90)) // rad/s
+        ));
+        ultrafast = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(95), //inches/s
+                new AngularVelConstraint(Math.toRadians(360)) // rad/s
+        ));
 
+        highAccel = new ProfileAccelConstraint(-60, 60); // inches/s^2
 
-        //Create actions here
+        shootingTimer = new ElapsedTime();
+
+        AutoStorage.goal = goal;
+        AutoStorage.auto = true;
+
+        Action savePosition = packet -> {
+            AutoStorage.autoEndPose = drive.localizer.getPose();
+            return true;
+        };
+
+        Action trackingOn = packet -> {
+            track = true;
+            return false;
+        };
+
+        Action trackingOff = packet -> {
+            track = false;
+            return false;
+        };
+
+        Action resetTurret = packet -> {
+            track = false;
+            targetAngle = 0;
+            return false;
+        };
+
         Action collect = packet -> {
             intake.collect();
-
-            return false; //False means action runs once, true loops the action
+            return false;
         };
 
         Action shoot = packet -> {
@@ -68,7 +117,7 @@ public class AutoBlueClose extends LinearOpMode {
                 shootingTimer.reset();
                 shooting = true;
             }
-            if (shootingTimer.seconds() < 3){
+            if (shootingTimer.seconds() < 1.37){
                 intake.shoot();
                 outtake.increaseSpeed();
                 return true;
@@ -95,158 +144,150 @@ public class AutoBlueClose extends LinearOpMode {
             return false;
         };
 
+        Action setMediumShooting = packet -> {
+            tracking.setOuttake(39, 1515, 0.32);
+            return false;
+        };
 
-        Action trackTag = packet -> {
-            tracking.fullTracking(packet);
+        Action updateTurret = packet -> {
+            if(track){
+                tracking.fullTracking(packet);
+            } else{
+                turret.turnTo(turret.degreesToTicks(targetAngle), null);
+            }
             return true;
         };
 
         //Create trajectories here
-        Action movement1 = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-15, -20), Math.toRadians(270),fast)
-                .waitSeconds(0.5)
-
+        Action moveTo1stShoot = drive.actionBuilder(initialPose)
+                .strafeToLinearHeading(new Vector2d(-17.5, -17.5), Math.toRadians(-90), fast, highAccel)
                 .build();
 
-
-
-        Action movement2 = drive.actionBuilder(new Pose2d(-15, -20, Math.toRadians (270)))
-                .waitSeconds(1.5)
-                .strafeToLinearHeading(new Vector2d(16, -30), Math.toRadians(270),fast)
-
-
+        Action moveToMidRow = drive.actionBuilder(new Pose2d(-17.5, -17.5, Math.toRadians (-90)))
+                .strafeToLinearHeading(new Vector2d(14.5, -17.5), Math.toRadians(-90), fast, highAccel)
                 .build();
 
-        Action movement3 = drive.actionBuilder(new Pose2d(16, -30, Math.toRadians(270)))
-                //              .strafeToLinearHeading(new Vector2d(18, 50), Math.toRadians(90))
-                .strafeToLinearHeading(new Vector2d(13, -61), Math.toRadians(270),slow)
-
-
+        Action midRowPickUp = drive.actionBuilder(new Pose2d(14.5, -17.5, Math.toRadians(-90)))
+                .strafeToLinearHeading(new Vector2d(11.5, -50.5), Math.toRadians(-90), slow, highAccel)
                 .build();
 
-        Action movement4 = drive.actionBuilder(new Pose2d(13, -61, Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(-3, -20), Math.toRadians(300),fast)
-//                .strafeToLinearHeading(new Vector2d(5, 30), Math.toRadians(90))
-                //               .strafeToLinearHeading(new Vector2d(-15, 20), Math.toRadians(60))
-
+        Action moveToMidRowShoot = drive.actionBuilder(new Pose2d(11.5, -50.5, Math.toRadians(-90)))
+                .strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(), fast, highAccel)
                 .build();
 
-        Action movement5_1 = drive.actionBuilder(new Pose2d(-3, -20, Math.toRadians(300)))//-15, 20, Math.toRadians(60)
-                .waitSeconds(2)
-                .splineTo(new Vector2d(12.5, -62.5), Math.toRadians(250),fast)
-
+        Action openGate1 = drive.actionBuilder(shootingPos)
+                .setReversed(false)
+                .splineTo(new Vector2d(9, -52), Math.toRadians(-110), fast, highAccel)
                 .build();
 
-        Action movement5_2 = drive.actionBuilder(new Pose2d(-3, -20, Math.toRadians(300)))//-15, 20, Math.toRadians(60)
-                .waitSeconds(2)
-                .splineTo(new Vector2d(12.5, -62.5), Math.toRadians(250),fast)
-
+        Action openGate2 = drive.actionBuilder(shootingPos)
+                .setReversed(false)
+                .splineTo(new Vector2d(9, -52), Math.toRadians(-110), fast, highAccel)
                 .build();
 
-        Action movement6_1 = drive.actionBuilder(new Pose2d(12.5, -62.5, Math.toRadians(250)))
-                .strafeToLinearHeading(new Vector2d(26, -66), Math.toRadians(221),fast)
-                .waitSeconds(1)
-
+        Action gatePickUp1 = drive.actionBuilder(new Pose2d(9, -52, Math.toRadians(-110)))
+                .strafeToLinearHeading(new Vector2d(27, -63.5), Math.toRadians(-145), fast, highAccel)
+                .strafeToLinearHeading(new Vector2d(13, -63.5), Math.toRadians(-145), fast, highAccel)
+                .waitSeconds(0.05)
                 .build();
 
-        Action movement6_2 = drive.actionBuilder(new Pose2d(12.5, -62.5, Math.toRadians(250)))
-                .strafeToLinearHeading(new Vector2d(26, -66), Math.toRadians(221),fast)
-                .waitSeconds(1)
-
+        Action gatePickUp2 = drive.actionBuilder(new Pose2d(9, -52, Math.toRadians(-110)))
+                .strafeToLinearHeading(new Vector2d(27, -63.5), Math.toRadians(-145), fast, highAccel)
+                .strafeToLinearHeading(new Vector2d(13, -63.5), Math.toRadians(-145), fast, highAccel)
+                .waitSeconds(0.05)
                 .build();
 
-        Action movement7 = drive.actionBuilder(new Pose2d(26, -66, Math.toRadians(221)))
-                .strafeToLinearHeading(new Vector2d(-3, -20), Math.toRadians(300))
-
+        Action moveToGateShoot1 = drive.actionBuilder(new Pose2d(13, -63.5, Math.toRadians(-145)))
+                .setReversed(true)
+                .splineTo(shootingPos.position, (shootingPos.heading.toDouble() + Math.PI), fast, highAccel)
                 .build();
 
-
-        Action movement8_1 = drive.actionBuilder(new Pose2d(26, -66, Math.toRadians(221)))
-                .strafeToLinearHeading(new Vector2d(-3, -20), Math.toRadians(300),fast)
-
+        Action moveToGateShoot2 = drive.actionBuilder(new Pose2d(13, -63.5, Math.toRadians(-145)))
+                .setReversed(true)
+                .splineTo(shootingPos.position, (shootingPos.heading.toDouble() + Math.PI), fast, highAccel)
                 .build();
 
-        Action movement8_2 = drive.actionBuilder(new Pose2d(26, -66, Math.toRadians(221)))
-                .strafeToLinearHeading(new Vector2d(-3, -20), Math.toRadians(300),fast)
-
+        Action moveToFrontRow = drive.actionBuilder(shootingPos)
+                .setReversed(false)
+                .strafeToLinearHeading(new Vector2d(-10.5, -27.5), Math.toRadians(-90), fast, highAccel)
                 .build();
 
-
-
-        Action movement9 = drive.actionBuilder(new Pose2d(-3, -20, Math.toRadians(300)))
-                .waitSeconds(2)
-                .strafeToLinearHeading(new Vector2d(-11, -30), Math.toRadians(270))
-
+        Action frontRowPickUp = drive.actionBuilder(shootingPos)
+                .splineTo(new Vector2d(-10.5, -52), Math.toRadians(-90), fast, highAccel)
                 .build();
 
-        Action movement10 = drive.actionBuilder(new Pose2d(-11, -30, Math.toRadians(270)))
-                .waitSeconds(2)
-                .strafeToLinearHeading(new Vector2d(-11, -50), Math.toRadians(270))
-
+        Action moveToFrontRowShoot = drive.actionBuilder(new Pose2d(-10.5, -52, Math.toRadians(-90)))
+                .strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(), fast, highAccel)
                 .build();
 
-        Action movement11 = drive.actionBuilder(new Pose2d(-11, -50, Math.toRadians(270)))
-                .strafeToLinearHeading(new Vector2d(-2, -20), Math.toRadians(250))
-
+        Action finalMove = drive.actionBuilder(shootingPos)
+                .strafeTo(new Vector2d(15, -10), ultrafast, highAccel)
                 .build();
 
-        Action movement12 = drive.actionBuilder(new Pose2d(-2, -20, Math.toRadians(270)))
-                .waitSeconds(2)
-                .strafeToLinearHeading(new Vector2d(-55, -22), Math.toRadians(250),ultrafast)
+        Action initialFire = new SequentialAction(
+                startFlywheel,
+                moveTo1stShoot,
+                shoot
+        );
 
-                .build();
+        Action midRowCycle = new SequentialAction(
+                moveToMidRow,
+                collect,
+                midRowPickUp,
+                moveToMidRowShoot,
+                shoot
+        );
 
+        Action gateCycle1 = new SequentialAction(
+                openGate1,
+                collect,
+                gatePickUp1,
+                moveToGateShoot1,
+                shoot
+        );
 
+        Action gateCycle2 = new SequentialAction(
+                openGate2,
+                collect,
+                gatePickUp2,
+                moveToGateShoot2,
+                shoot
+        );
 
+        Action frontRowCycle = new SequentialAction(
+                //moveToFrontRow,
+                collect,
+                frontRowPickUp,
+                moveToFrontRowShoot,
+                shoot
+        );
 
+        Action finish = new SequentialAction(
+                resetTurret,
+                stopIntake,
+                stopFlywheel,
+                finalMove
+        );
 
-        // Code here runs on initialization
+        tracking.setScaling(false);
+        tracking.setOuttake(35, 1260, 0.35);
 
         waitForStart();
 
         if (isStopRequested()) return;
 
         Actions.runBlocking(
-                new ParallelAction( //Put actions that run independant of movement, e.g sensing and tracking
-                        trackTag,
-
-                        new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
-                                startFlywheel,
-                                movement1,
-                                shoot,
-                                movement2,
-                                collect,
-                                movement3,
-                                stopIntake,
-                                movement4,
-                                shoot,
-                                movement5_1,
-                                collect,
-                                movement6_1,
-                                stopIntake,
-                                movement8_1,
-                                shoot,
-
-
-                                movement5_2,
-                                collect,
-                                movement6_2,
-                                stopIntake,
-                                movement8_2,
-                                shoot,
-
-
-
-//                                movement9,
-                                //                               collect,
-                                //                               movement10,
-                                //                               stopIntake,
-                                //                               movement11,
-                                //                               shoot,
-
-                                movement12,
-                                stopFlywheel,
-                                stopIntake
+                new ParallelAction(
+                        updateTurret,
+                        savePosition,
+                        new SequentialAction(
+                                initialFire,
+                                setMediumShooting,
+                                midRowCycle,
+                                gateCycle1,
+                                gateCycle2,
+                                frontRowCycle,
+                                finish
                         )
                 )
         );
