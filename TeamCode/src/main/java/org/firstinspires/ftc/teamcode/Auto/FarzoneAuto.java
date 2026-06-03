@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 
  //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
-@Autonomous(name = "BlueFar", group = "Autonomous") //Change the name here to what you want to show on the driver station
+@Autonomous(name = "FarzoneAuto", group = "Autonomous") //Change the name here to what you want to show on the driver station
 public class FarzoneAuto extends LinearOpMode {
 
     //Put initialization of variables here (e.g subsystems)
