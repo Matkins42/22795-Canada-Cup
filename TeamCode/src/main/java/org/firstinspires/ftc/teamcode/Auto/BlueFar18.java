@@ -30,8 +30,8 @@ import java.util.Arrays;
 
 
 //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
-@Autonomous(name = "BlueFar", group = "Autonomous") //Change the name here to what you want to show on the driver station
-public class BlueFar extends LinearOpMode {
+@Autonomous(name = "BlueFar18", group = "Autonomous") //Change the name here to what you want to show on the driver station
+public class BlueFar18 extends LinearOpMode {
 
     //Put initialization of variables here (e.g subsystems)
     private IntakeSubsystem intake;
@@ -54,12 +54,10 @@ public class BlueFar extends LinearOpMode {
     private VelConstraint medium;
     private VelConstraint fast;
 
-    private Pose2d shootingPos = new Pose2d(56, -18, Math.toRadians(-80));
-     
+    private Pose2d shootingPos = new Pose2d(56, -21, Math.toRadians(-80));
+    private Pose2d cornerPos = new Pose2d(61, -57, Math.toRadians(-80));
 
-
-
-     @Override
+    @Override
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(61, -15  , Math.toRadians(180)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
@@ -114,7 +112,7 @@ public class BlueFar extends LinearOpMode {
          };
 
          Action aimTurret = packet -> {
-             targetAngle = 82.25;
+             targetAngle = 83.4;
              return false;
          };
 
@@ -128,7 +126,7 @@ public class BlueFar extends LinearOpMode {
                  shootingTimer.reset();
                  shooting = true;
              }
-             if (shootingTimer.seconds() < 1.625){
+             if (shootingTimer.seconds() < 1.77){
                  intake.shoot();
                  outtake.increaseSpeed();
                  return true;
@@ -136,6 +134,7 @@ public class BlueFar extends LinearOpMode {
                  shooting = false;
                  outtake.resetIncrease();
                  intake.stop();
+                 intake.resetStates();
                  return false;
              }
          };
@@ -166,40 +165,37 @@ public class BlueFar extends LinearOpMode {
 
          Action moveToRow = drive.actionBuilder(initialPose)
                  .splineTo(new Vector2d(35, -35), Math.toRadians(-90),fast,  highAccel)
-                 .strafeToLinearHeading(new Vector2d(35, -61), Math.toRadians(-90),fast,  highAccel)
-                 .strafeToLinearHeading(new Vector2d(56,-18), Math.toRadians(-80),fast,  highAccel)
+                 .strafeToLinearHeading(new Vector2d(35, -59.5), Math.toRadians(-90),fast,  highAccel)
+                 .strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(),fast,  highAccel)
                  .build();
 
-
          Action moveToCorner1 = drive.actionBuilder(shootingPos)
-                 .splineTo(new Vector2d(61, -58), Math.toRadians(-80),fast, highAccel)
-                 . strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(),fast, highAccel)
+                 .splineTo(cornerPos.position, cornerPos.heading.toDouble(),fast, highAccel)
+                 .strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(),fast, highAccel)
                  .build();
 
          Action moveToCorner2 = drive.actionBuilder(shootingPos)
-                 .splineTo(new Vector2d(61, -58), Math.toRadians(-80),fast, highAccel)
-                 . strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(),fast, highAccel)
+                 .splineTo(cornerPos.position, cornerPos.heading.toDouble(),fast, highAccel)
+                 .strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(),fast, highAccel)
                  .build();
 
          Action moveToCorner3 = drive.actionBuilder(shootingPos)
-                 .splineTo(new Vector2d(61, -58), Math.toRadians(-80),fast, highAccel)
-                 . strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(),fast,  highAccel)
+                 .splineTo(cornerPos.position, cornerPos.heading.toDouble(),fast, highAccel)
+                 .strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(),fast,  highAccel)
                  .build();
 
          Action moveToCorner4 = drive.actionBuilder(shootingPos)
-                 .splineTo(new Vector2d(61, -58), Math.toRadians(-80),fast, highAccel)
-                 . strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(),fast,  highAccel)
+                 .splineTo(cornerPos.position, cornerPos.heading.toDouble(),fast, highAccel)
+                 .strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(),fast,  highAccel)
                  .build();
 
-
-
          Action offLine  = drive.actionBuilder(shootingPos)
-                 . strafeToLinearHeading(new Vector2d(55, -30), Math.toRadians(-80),fast, highAccel)
+                 .strafeToLinearHeading(new Vector2d(55, -30), Math.toRadians(-80),fast, highAccel)
                  .build();
 
          Action initialFire = new SequentialAction(
                  startFlywheel,
-                 new SleepAction(2.3),
+                 new SleepAction(2.53),
                  shoot
                  );
 
@@ -238,7 +234,7 @@ public class BlueFar extends LinearOpMode {
 
 
          tracking.setScaling(false);
-        tracking.setOuttake(51, 1990, 0.425);
+        tracking.setOuttake(50.5, 2050, 0.47);
 
         waitForStart();
 

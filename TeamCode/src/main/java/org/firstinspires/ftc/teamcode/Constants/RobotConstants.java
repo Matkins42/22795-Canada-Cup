@@ -34,7 +34,7 @@ public class RobotConstants {
     public static double KI = 0.0005; //0.0005 for 312 motor
     public static double KD = 0.0029; //0.0005 for 312 motor
     public static final double MAX_I = 0.2;
-    public static double DEADBAND = 2;
+    public static double DEADBAND = 5;
     public static final double LL_HEIGHT = 315;
     public static final double LL_ANGLE = 26;
     //public static double LL_BUFFER_TIME = 0.01;

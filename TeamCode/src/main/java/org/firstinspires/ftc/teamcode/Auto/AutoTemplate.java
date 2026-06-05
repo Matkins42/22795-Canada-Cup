@@ -128,6 +128,7 @@ public class AutoTemplate extends LinearOpMode {
                 shooting = false;
                 outtake.resetIncrease();
                 intake.stop();
+                intake.resetStates();
                 return false;
             }
         };
