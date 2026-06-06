@@ -69,6 +69,8 @@ public class BlueFar18 extends LinearOpMode {
          roadRunner = new RoadRunnerSubsystem(drive);
          tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal);
 
+        turret.reset();
+
          slow = new MinVelConstraint(Arrays.asList(
                  new TranslationalVelConstraint(25), //inches/s
                  new AngularVelConstraint(Math.toRadians(180)) // rad/s

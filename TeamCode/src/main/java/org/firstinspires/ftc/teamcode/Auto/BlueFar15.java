@@ -67,6 +67,8 @@ public class BlueFar15 extends LinearOpMode {
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal);
 
+        turret.reset();
+
         slow = new MinVelConstraint(Arrays.asList(
                 new TranslationalVelConstraint(25), //inches/s
                 new AngularVelConstraint(Math.toRadians(180)) // rad/s
@@ -222,6 +224,8 @@ public class BlueFar15 extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+
+        tracking.setOuttake(50.5, 2060, 0.47);
 
         Actions.runBlocking(
                 new ParallelAction( //Put actions that run independant of movement, e.g sensing and tracking

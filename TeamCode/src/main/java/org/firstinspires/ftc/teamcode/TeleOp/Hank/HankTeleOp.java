@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
@@ -47,6 +48,10 @@ public class HankTeleOp extends LinearOpMode {
         //NOTE: Driving subsystem must be initialised after Roadrunner/Tracking subsystem
         //else controller scheme is messed up
         driveTrain = new DrivingSubsystem(hardwareMap);
+
+        if(!AutoStorage.auto){ //No auto has been run
+            turret.reset();
+        }
 
         //Starting lights
         feedback.setLight(gamepad1, RobotConstants.PINK);
@@ -107,6 +112,10 @@ public class HankTeleOp extends LinearOpMode {
             } else if(gamepad2.dpad_right){
                 trackingMode = "manual";
                 feedback.setLight(gamepad2, RobotConstants.RED);
+            }
+
+            if(gamepad2.share){
+                turret.reset();
             }
 
             //Automatic tracking

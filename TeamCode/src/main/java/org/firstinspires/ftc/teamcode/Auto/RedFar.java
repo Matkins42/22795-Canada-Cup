@@ -64,12 +64,13 @@ public class RedFar extends LinearOpMode {
         Pose2d initialPose = new Pose2d(61, 15  , Math.toRadians(180)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
-
          outtake = new OuttakeSubsystem(hardwareMap);
          intake = new IntakeSubsystem(hardwareMap, outtake);
          turret = new TurretSubsystem(hardwareMap);
          roadRunner = new RoadRunnerSubsystem(drive);
          tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal);
+
+         turret.reset();
 
          slow = new MinVelConstraint(Arrays.asList(
                  new TranslationalVelConstraint(25), //inches/s

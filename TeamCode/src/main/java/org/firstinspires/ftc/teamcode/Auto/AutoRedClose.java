@@ -63,6 +63,8 @@ public class AutoRedClose extends LinearOpMode {
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal);
 
+        turret.reset();
+
         fast = new MinVelConstraint(Arrays.asList(
                 new TranslationalVelConstraint(75), //inches/s
                 new AngularVelConstraint(Math.toRadians(270)) // rad/s

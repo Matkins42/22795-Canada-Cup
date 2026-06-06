@@ -70,6 +70,8 @@ public class AutoTemplate extends LinearOpMode {
         roadRunner = new RoadRunnerSubsystem(drive);
         tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal);
 
+        turret.reset();
+
         //Sets roadrunner movement parameters
         speedExample = new MinVelConstraint(Arrays.asList(
                 new TranslationalVelConstraint(30), //inches/s

@@ -23,11 +23,11 @@ public class RobotConstants {
     public static final double RR_DISTANCE_OFFSET = 200;
 
     //Driving constants
-    public static double DRIVING_SPEED = 0.85;
+    public static double DRIVING_SPEED = 0.9;
 
     //Turret constants
     public static double MANUAL_ROTATION_SPEED = 0.5;
-    public static double TURRET_RANGE = 360;
+    public static double TURRET_RANGE = 340;
     public static final int TICKS_PER_ROTATION = 146; //538 312rpm
     public static final double GEAR_RATIO = (double) 51 / 24;
     public static double KP = 0.0268; //0.004 for 312 motor
@@ -48,12 +48,12 @@ public class RobotConstants {
     public static double BACK_FIRING_POWER_2 = -0.75;
     public static double SHOOTING_STATE_1_TIME = 0.1;
     public static double SHOOTING_STATE_2_MIN_TIME = 0.3; //0.4 for short, 0.65 for long, need to do dynamic
-    public static final Range SPACING_TIME = new Range(0.35, 0.62);
+    public static Range SPACING_TIME = new Range(0.375, 0.62);
     public static double SPACING_GRADIENT = 0.82;
     public static boolean SET_SPACING_TIME = true;
 
     //Outtake constants
-    public static Range OUTTAKE_VELOCITY = new Range(1290, 2210); //Absolute max velocity at full power is 2380 (ticks/s)  Old values (1300, 2228)
+    public static Range OUTTAKE_VELOCITY = new Range(1295, 2210); //Absolute max velocity at full power is 2380 (ticks/s)  Old values (1300, 2228)
     public static final Range HOOD_ANGLE = new Range(31.22, 44.07);
     public static final double EXTENDED_SERVO_POSITION = 0.3;
     public static double HOOD_DAMPENING = 0.01;
@@ -77,9 +77,9 @@ public class RobotConstants {
     public static final double[] YELLOW = {255, 255, 0};
     public static final double[] GREEN = {0, 255, 0};
     public static final double[] PURPLE = {255, 0, 255};
-    public static final double[] PINK = {255, 1, 1};
-    public static final double[] ORANGE = {255, 1, 0};
-    public static final double[] LIGHT_BLUE = {30, 30, 255};
+    public static final double[] PINK = {255, 105, 180};
+    public static final double[] ORANGE = {255, 165, 0};
+    public static final double[] LIGHT_BLUE = {173, 216, 230};
 
     public static class Target {
         public final int PIPELINE;

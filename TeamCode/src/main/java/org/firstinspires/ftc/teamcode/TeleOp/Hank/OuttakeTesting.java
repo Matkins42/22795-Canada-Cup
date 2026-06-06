@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Hank;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
 
+@Disabled
 @TeleOp(name = "OuttakeTesting", group = "Linear Opmode") //Change the name here to what you want to show on the driver station
 public class OuttakeTesting extends LinearOpMode {
 

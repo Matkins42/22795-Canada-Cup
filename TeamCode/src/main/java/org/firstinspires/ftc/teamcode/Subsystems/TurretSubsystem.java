@@ -23,16 +23,13 @@ public class TurretSubsystem {
     public TurretSubsystem(HardwareMap hardwareMap) {
         turret = hardwareMap.get(DcMotor.class, "turret");
         turret.setDirection(DcMotor.Direction.REVERSE);
-        if(!AutoStorage.auto){ //No auto has been run
-            turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         time = new ElapsedTime();
     }
 
-    public void resetTurret(){
+    public void reset(){
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }

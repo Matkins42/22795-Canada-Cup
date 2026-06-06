@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TeleOp.Hank;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.RoadRunnerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
+@Disabled
 @TeleOp(name = "TurretTracking", group = "Linear Opmode")
 public class TurretTracking extends LinearOpMode {
 
