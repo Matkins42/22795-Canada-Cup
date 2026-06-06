@@ -30,8 +30,8 @@ import java.util.Arrays;
 
 
 //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
-@Autonomous(name = "BlueFar15", group = "Autonomous") //Change the name here to what you want to show on the driver station
-public class BlueFar15 extends LinearOpMode {
+@Autonomous(name = "RedFar15", group = "Autonomous") //Change the name here to what you want to show on the driver station
+public class RedFar15 extends LinearOpMode {
 
     //Put initialization of variables here (e.g subsystems)
     private IntakeSubsystem intake;
@@ -39,7 +39,7 @@ public class BlueFar15 extends LinearOpMode {
     private TurretSubsystem turret;
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
-    private RobotConstants.Target goal = RobotConstants.BLUE_GOAL;
+    private RobotConstants.Target goal = RobotConstants.RED_GOAL;
 
     private ElapsedTime shootingTimer;
     private boolean shooting;
@@ -47,19 +47,19 @@ public class BlueFar15 extends LinearOpMode {
     private AccelConstraint highAccel;
 
     private boolean track = false;
-    private double targetAngle = -23;
+    private double targetAngle = 23;
 
     private VelConstraint slow;
     private VelConstraint medium;
     private VelConstraint fast;
 
-    private Pose2d shootingPos = new Pose2d(49, -12, Math.toRadians(-110)); //x 55
-    private Pose2d cornerPos = new Pose2d(59, -62, Math.toRadians(-80)); //x61
-    private Pose2d edgePos = new Pose2d(48, -62, Math.toRadians(-90));
+    private Pose2d shootingPos = new Pose2d(49, 12, Math.toRadians(110));
+    private Pose2d cornerPos = new Pose2d(59, 62, Math.toRadians(80));
+    private Pose2d edgePos = new Pose2d(48, 62, Math.toRadians(90));
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d initialPose = new Pose2d(61, -15, Math.toRadians(180)); //Sets the robots starting position
+        Pose2d initialPose = new Pose2d(61, 15, Math.toRadians(180)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         outtake = new OuttakeSubsystem(hardwareMap);
@@ -113,7 +113,7 @@ public class BlueFar15 extends LinearOpMode {
         };
 
         Action aimTurret = packet -> {
-            targetAngle = 50.25;
+            targetAngle = -50.25;
             return false;
         };
 
@@ -165,8 +165,8 @@ public class BlueFar15 extends LinearOpMode {
         };
 
         Action moveToRow = drive.actionBuilder(initialPose)
-                .splineTo(new Vector2d(35, -35), Math.toRadians(-90), fast, highAccel)
-                .strafeToLinearHeading(new Vector2d(35, -59.5), Math.toRadians(-90), fast, highAccel)
+                .splineTo(new Vector2d(35, 35), Math.toRadians(90), fast, highAccel)
+                .strafeToLinearHeading(new Vector2d(35, 59.5), Math.toRadians(90), fast, highAccel)
                 .strafeToLinearHeading(shootingPos.position, shootingPos.heading.toDouble(), fast, highAccel)
                 .build();
 
@@ -196,7 +196,7 @@ public class BlueFar15 extends LinearOpMode {
                 .build();
 
         Action offLine = drive.actionBuilder(shootingPos)
-                .strafeToLinearHeading(new Vector2d(55, -30), Math.toRadians(-80), fast, highAccel)
+                .strafeToLinearHeading(new Vector2d(55, 30), Math.toRadians(80), fast, highAccel)
                 .build();
 
         Action initialFire = new SequentialAction(
