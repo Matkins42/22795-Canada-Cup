@@ -62,6 +62,7 @@ public class OuttakeSubsystem {
     public double getTargetVelocity(){
         return targetSpeed;
     }
+
     public void startFlywheel(){
         flywheel.setVelocity(targetSpeed);
         on = true;

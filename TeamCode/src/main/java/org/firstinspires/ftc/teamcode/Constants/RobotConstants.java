@@ -57,7 +57,7 @@ public class RobotConstants {
     public static final Range HOOD_ANGLE = new Range(31.22, 44.07);
     public static final double EXTENDED_SERVO_POSITION = 0.3;
     public static double HOOD_DAMPENING = 0.01;
-    public static double INCREASE_RATE = 300; //ticks per second per second
+    public static double INCREASE_RATE = 0; //ticks per second per second
     public static double MAX_INCREASE = 0; //ticks per second
     public static final double CLOSE_OUTTAKE_SPEED = 1400;
     public static final double FAR_OUTTAKE_SPEED = 2250;

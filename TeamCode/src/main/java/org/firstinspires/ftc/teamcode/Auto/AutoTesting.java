@@ -30,6 +30,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 
 
+@Disabled
 @Autonomous(name = "Testing", group = "Autonomous") //Change the name here to what you want to show on the driver station
 public class AutoTesting extends LinearOpMode {
 

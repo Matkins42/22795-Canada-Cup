@@ -29,7 +29,7 @@ import java.util.Arrays;
 
 
 @Autonomous(name = "BlueClose", group = "Autonomous") //Change the name here to what you want to show on the driver station
-public class AutoBlueClose extends LinearOpMode {
+public class BlueClose extends LinearOpMode {
 
     //Put initialization of variables here (e.g subsystems)
     private IntakeSubsystem intake;

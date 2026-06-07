@@ -13,7 +13,6 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -30,7 +29,7 @@ import java.util.Arrays;
 
 
 @Autonomous(name = "RedClose", group = "Autonomous") //Change the name here to what you want to show on the driver station
-public class AutoRedClose extends LinearOpMode {
+public class RedClose extends LinearOpMode {
 
     //Put initialization of variables here (e.g subsystems)
     private IntakeSubsystem intake;

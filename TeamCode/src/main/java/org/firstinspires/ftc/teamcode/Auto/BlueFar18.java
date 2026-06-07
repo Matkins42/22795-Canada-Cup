@@ -14,6 +14,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -29,7 +30,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
 import java.util.Arrays;
 
 
-//REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
+@Disabled
 @Autonomous(name = "BlueFar18", group = "Autonomous") //Change the name here to what you want to show on the driver station
 public class BlueFar18 extends LinearOpMode {
 
