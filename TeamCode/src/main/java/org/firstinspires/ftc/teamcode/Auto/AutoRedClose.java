@@ -149,7 +149,7 @@ public class AutoRedClose extends LinearOpMode {
         };
 
         Action setMediumShooting = packet -> {
-            tracking.setOuttake(39, 1515, 0.32);
+            tracking.setOuttake(39.25, 1510, 0.32);
             return false;
         };
 
@@ -181,21 +181,21 @@ public class AutoRedClose extends LinearOpMode {
 
         Action openGate1 = drive.actionBuilder(shootingPos)
                 .setReversed(false)
-                .splineTo(new Vector2d(9, 52), Math.toRadians(110), fast, highAccel)
+                .splineTo(new Vector2d(9, 52.5), Math.toRadians(110), fast, highAccel)
                 .build();
 
         Action openGate2 = drive.actionBuilder(shootingPos)
                 .setReversed(false)
-                .splineTo(new Vector2d(9, 52), Math.toRadians(110), fast, highAccel)
+                .splineTo(new Vector2d(9, 52.5), Math.toRadians(110), fast, highAccel)
                 .build();
 
-        Action gatePickUp1 = drive.actionBuilder(new Pose2d(9, 52, Math.toRadians(110)))
+        Action gatePickUp1 = drive.actionBuilder(new Pose2d(9, 52.5, Math.toRadians(110)))
                 .strafeToLinearHeading(new Vector2d(27, 63.5), Math.toRadians(145), fast, highAccel)
                 .strafeToLinearHeading(new Vector2d(13, 63.5), Math.toRadians(145), fast, highAccel)
                 .waitSeconds(0.05)
                 .build();
 
-        Action gatePickUp2 = drive.actionBuilder(new Pose2d(9, 52, Math.toRadians(110)))
+        Action gatePickUp2 = drive.actionBuilder(new Pose2d(9, 52.5, Math.toRadians(110)))
                 .strafeToLinearHeading(new Vector2d(27, 63.5), Math.toRadians(145), fast, highAccel)
                 .strafeToLinearHeading(new Vector2d(13, 63.5), Math.toRadians(145), fast, highAccel)
                 .waitSeconds(0.05)
@@ -225,7 +225,7 @@ public class AutoRedClose extends LinearOpMode {
                 .build();
 
         Action finalMove = drive.actionBuilder(shootingPos)
-                .strafeTo(new Vector2d(15, 10), ultrafast, highAccel)
+                .strafeTo(new Vector2d(-10.5, 30), ultrafast, highAccel)
                 .build();
 
         Action initialFire = new SequentialAction(
@@ -274,7 +274,7 @@ public class AutoRedClose extends LinearOpMode {
         );
 
         tracking.setScaling(false);
-        tracking.setOuttake(35, 1260, 0.35);
+        tracking.setOuttake(35.25, 1255, 0.35);
 
         waitForStart();
 

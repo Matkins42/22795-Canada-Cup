@@ -23,16 +23,16 @@ public class RobotConstants {
     public static final double RR_DISTANCE_OFFSET = 200;
 
     //Driving constants
-    public static double DRIVING_SPEED = 0.9;
+    public static double DRIVING_SPEED = 0.95;
 
     //Turret constants
     public static double MANUAL_ROTATION_SPEED = 0.5;
     public static double TURRET_RANGE = 340;
     public static final int TICKS_PER_ROTATION = 146; //538 312rpm
     public static final double GEAR_RATIO = (double) 51 / 24;
-    public static double KP = 0.0268; //0.004 for 312 motor
-    public static double KI = 0.0005; //0.0005 for 312 motor
-    public static double KD = 0.0029; //0.0005 for 312 motor
+    public static double KP = 0.0264; //0.0268 //0.004 for 312 motor
+    public static double KI = 0.005; //0.0005 //0.0005 for 312 motor
+    public static double KD = 0.0044; //0.0029 //0.0005 for 312 motor
     public static final double MAX_I = 0.2;
     public static double DEADBAND = 5;
     public static final double LL_HEIGHT = 315;
@@ -67,7 +67,7 @@ public class RobotConstants {
     public static double HOOD_CLOSE_LIMIT = 1050; //mm 750 without POI
     public static double HOOD_FAR_LIMIT = 3800; //mm 3800 without POI
     public static double HOOD_GRADIENT = 0.63;
-    public static double SPEED_TARGET_RANGE = 40;
+    public static double SPEED_TARGET_RANGE = 30;
 
 
     //Feedback Constants

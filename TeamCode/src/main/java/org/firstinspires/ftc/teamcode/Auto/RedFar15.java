@@ -47,7 +47,7 @@ public class RedFar15 extends LinearOpMode {
     private AccelConstraint highAccel;
 
     private boolean track = false;
-    private double targetAngle = 23;
+    private double targetAngle = 23.25;
 
     private VelConstraint slow;
     private VelConstraint medium;
@@ -196,7 +196,7 @@ public class RedFar15 extends LinearOpMode {
                 .build();
 
         Action offLine = drive.actionBuilder(shootingPos)
-                .strafeToLinearHeading(new Vector2d(55, 30), Math.toRadians(80), fast, highAccel)
+                .strafeTo(new Vector2d(55, 30), fast, highAccel)
                 .build();
 
         Action initialFire = new SequentialAction(
