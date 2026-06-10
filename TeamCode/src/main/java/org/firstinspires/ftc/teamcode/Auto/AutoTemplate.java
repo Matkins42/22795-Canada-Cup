@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Auto;
 
+import com.acmerobotics.roadrunner.AccelConstraint;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
@@ -24,11 +28,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Storage.AutoStorage;
 import org.firstinspires.ftc.teamcode.Subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.RoadRunnerSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TrackingSubsystem;
 import org.firstinspires.ftc.teamcode.Subsystems.TurretSubsystem;
+
+import java.util.Arrays;
 
 
 @Disabled //REMOVE THIS LINE - it makes it so it doesn't show up on the driver station
@@ -42,32 +49,67 @@ public class AutoTemplate extends LinearOpMode {
     private TrackingSubsystem tracking;
     private RoadRunnerSubsystem roadRunner;
 
-    private VelConstraint speedExample;
+    private RobotConstants.Target goal = RobotConstants.BLUE_GOAL; //Change this depending on what team we are
 
     private boolean shooting = false;
     private ElapsedTime shootingTimer;
+    private boolean track = true;
+    private double targetAngle = 0;
 
+    private VelConstraint speedExample;
+    private AccelConstraint accelExample;
 
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0)); //Sets the robots starting position
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
-        intake = new IntakeSubsystem(hardwareMap);
         outtake = new OuttakeSubsystem(hardwareMap);
-        roadRunner = new RoadRunnerSubsystem(drive);
+        intake = new IntakeSubsystem(hardwareMap, outtake);
         turret = new TurretSubsystem(hardwareMap);
-        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, outtake, RobotConstants.BLUE_GOAL); //Change this depending on what team we are
+        roadRunner = new RoadRunnerSubsystem(drive);
+        tracking = new TrackingSubsystem(hardwareMap, roadRunner, turret, intake, outtake, goal);
 
-        //Create vel constraints for custom velocity, this is for linear movement (not turning) - the units are inches per second
-        speedExample = new TranslationalVelConstraint(20);
+        turret.reset();
+
+        //Sets roadrunner movement parameters
+        speedExample = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(30), //inches/s
+                new AngularVelConstraint(Math.toRadians(180)) // rad/s
+        ));
+
+        accelExample = new ProfileAccelConstraint(-30, 30); // inches/s^2
 
         shootingTimer = new ElapsedTime();
+
+        AutoStorage.goal = goal;
+        AutoStorage.auto = true;
 
         //Create actions here
         Action exampleAction = packet -> {
             //Put action code here
             return false; //False means action runs once, true loops the action
+        };
+
+        Action savePosition = packet -> {
+            AutoStorage.autoEndPose = drive.localizer.getPose();
+            return true;
+        };
+
+        Action trackingOn = packet -> {
+            track = true;
+            return false;
+        };
+
+        Action trackingOff = packet -> {
+            track = false;
+            return false;
+        };
+
+        Action resetTurret = packet -> {
+            track = false;
+            targetAngle = 0;
+            return false;
         };
 
         Action collect = packet -> {
@@ -88,6 +130,7 @@ public class AutoTemplate extends LinearOpMode {
                 shooting = false;
                 outtake.resetIncrease();
                 intake.stop();
+                intake.resetStates();
                 return false;
             }
         };
@@ -107,13 +150,12 @@ public class AutoTemplate extends LinearOpMode {
             return false;
         };
 
-        Action resetTurret = packet -> {
-            turret.turnTo(0, packet);
-            return false;
-        };
-
-        Action trackTag = packet -> {
-            tracking.fullTracking(packet);
+        Action updateTurret = packet -> {
+            if(track){
+                tracking.fullTracking(packet);
+            } else{
+                turret.turnTo(turret.degreesToTicks(targetAngle), null);
+            }
             return true;
         };
 
@@ -121,15 +163,14 @@ public class AutoTemplate extends LinearOpMode {
         Action exampleTrajectory = drive.actionBuilder(initialPose)
 //                    Put trajectory code here
 //                    e.g
-
-//                    .lineToYSplineHeading(33, Math.toRadians(0))
-//                    .strafeTo(new Vector2d(44.5, 30), speedExample)  -------  set a custom speed at the end of each movement function
-//                    .turn(Math.toRadians(180))
-//                    .waitSeconds(3)
-
+                    .lineToYSplineHeading(33, Math.toRadians(0))
+                    .strafeTo(new Vector2d(44.5, 30), speedExample, accelExample) // -------  set a custom speed and acceleration at the end of each movement function
+                    .turn(Math.toRadians(180))
+                    .waitSeconds(3)
                     .build();
 
-        // Code here runs on initialization
+        tracking.setScaling(false);
+        tracking.setOuttake(45, 1400, 0.35);
 
         waitForStart();
 
@@ -137,10 +178,13 @@ public class AutoTemplate extends LinearOpMode {
 
         Actions.runBlocking(
                 new ParallelAction( //Put actions that run independant of movement, e.g sensing and tracking
-                        trackTag,
+                        updateTurret,
+                        savePosition,
                         new SequentialAction( //Put ordered actions here, e.g movement, intaking, arm movement
                                 exampleTrajectory,
-                                exampleAction
+                                exampleAction,
+                                trackingOff,
+                                resetTurret
                         )
                 )
         );

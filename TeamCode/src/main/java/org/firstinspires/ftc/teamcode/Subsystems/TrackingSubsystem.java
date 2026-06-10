@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
 public class TrackingSubsystem {
-
     private TurretSubsystem turret;
+    private IntakeSubsystem intake;
     private OuttakeSubsystem outtake;
     private LimeLightSubsystem limeLight;
     private RoadRunnerSubsystem roadRunner;
@@ -16,9 +18,16 @@ public class TrackingSubsystem {
     private double targetTicks = 0;
     private RobotConstants.Target target = RobotConstants.BLUE_GOAL;
     private double distance = 0;
+    private double minDistance = RobotConstants.DISTANCE_NO_CLAMP.MIN;
+    private double maxDistance = RobotConstants.DISTANCE_NO_CLAMP.MAX;
 
-    public TrackingSubsystem(HardwareMap hardwareMap, RoadRunnerSubsystem roadRunerSubsystem, TurretSubsystem turretSubsystem, OuttakeSubsystem outtakeSubsystem, RobotConstants.Target goal) {
+    private boolean dynamicScaling = true;
+
+    //private ElapsedTime timer = new ElapsedTime();
+
+    public TrackingSubsystem(HardwareMap hardwareMap, RoadRunnerSubsystem roadRunerSubsystem, TurretSubsystem turretSubsystem, IntakeSubsystem intakeSubsystem, OuttakeSubsystem outtakeSubsystem, RobotConstants.Target goal) {
         turret = turretSubsystem;
+        intake = intakeSubsystem;
         outtake = outtakeSubsystem;
         limeLight = new LimeLightSubsystem(hardwareMap);
         roadRunner = roadRunerSubsystem;
@@ -31,6 +40,10 @@ public class TrackingSubsystem {
         roadRunner.setTarget(target);
     }
 
+    public void setScaling(boolean scaling){
+        dynamicScaling = scaling;
+    }
+
     public double getDistance(){
         return distance;
     }
@@ -41,10 +54,13 @@ public class TrackingSubsystem {
         if(limeLight.seesTag()){
             targetTicks = turret.getPosition() + turret.degreesToTicks(limeLight.getXAngle());
             distance = limeLight.getDistanceTrig();
-        } else{
+            //timer.reset();
+        } else{ //if(timer.seconds() >= RobotConstants.LL_BUFFER_TIME)
             targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle());
             distance = roadRunner.getDistance();
         }
+
+        distance = Math.min(maxDistance, Math.max(distance, minDistance));
 
         if (packet != null){
             packet.put("limeLight", turret.degreesToTicks(limeLight.getXAngle()));
@@ -57,7 +73,9 @@ public class TrackingSubsystem {
         }
 
         turret.turnTo(targetTicks, packet);
-        adjustOuttake();
+        if (dynamicScaling) {
+            adjustOuttake();
+        }
         outtake.update();
     }
 
@@ -71,13 +89,17 @@ public class TrackingSubsystem {
             targetTicks = turret.getPosition();
         }
 
+        distance = Math.min(maxDistance, Math.max(distance, minDistance));
+
         if (packet != null){
             packet.put("limeLight", turret.degreesToTicks(limeLight.getXAngle()));
             packet.put("targetTicks", targetTicks);
         }
 
         turret.turnTo(targetTicks, packet);
-        adjustOuttake();
+        if (dynamicScaling) {
+            adjustOuttake();
+        }
         outtake.update();
     }
 
@@ -87,22 +109,29 @@ public class TrackingSubsystem {
         targetTicks = turret.degreesToTicks(roadRunner.getEstimatedAngle());
         distance = roadRunner.getDistance();
 
+        distance = Math.min(maxDistance, Math.max(distance, minDistance));
+
         if (packet != null){
             packet.put("targetTicks", targetTicks);
         }
 
         turret.turnTo(targetTicks, packet);
-        adjustOuttake();
+        if (dynamicScaling) {
+            adjustOuttake();
+        }
         outtake.update();
     }
 
     public void adjustOuttake(){
         outtake.setHoodAngle(RobotConstants.HOOD_ANGLE.eerp(RobotConstants.HOOD_CLOSE_LIMIT, RobotConstants.HOOD_FAR_LIMIT, distance, RobotConstants.HOOD_GRADIENT));
         outtake.setVelocity(RobotConstants.OUTTAKE_VELOCITY.eerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance, RobotConstants.VEL_GRADIENT));
+        intake.setSpacingTime(RobotConstants.SPACING_TIME.eerp(RobotConstants.VEL_CLOSE_LIMIT, RobotConstants.VEL_FAR_LIMIT, distance, RobotConstants.SPACING_GRADIENT));
     }
 
-    public boolean trackingTag(){
-        return limeLight.seesTag();
+    public void setOuttake(double angle, double velocity, double spacing){
+        outtake.setHoodAngle(angle);
+        outtake.setVelocity(velocity);
+        intake.setSpacingTime(spacing);
     }
 
     public double xPos(){
@@ -121,5 +150,10 @@ public class TrackingSubsystem {
 
     public boolean seesTag(){
         return limeLight.seesTag();
+    }
+
+    public void setDistanceClamps(double min, double max){
+        minDistance = min;
+        maxDistance = max;
     }
 }

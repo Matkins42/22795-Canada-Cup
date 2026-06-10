@@ -28,11 +28,19 @@ public class LimeLightSubsystem {
     }
 
     public double getXAngle(){
-        return limeLight.getLatestResult().getTx();
+        LLResult data = limeLight.getLatestResult();
+        if(data == null || !data.isValid()){
+            return 0;
+        }
+        return data.getTx();
     }
 
     public double getYAngle(){
-        return limeLight.getLatestResult().getTy();
+        LLResult data = limeLight.getLatestResult();
+        if(data == null || !data.isValid()){
+            return 0;
+        }
+        return data.getTy();
     }
 
     public void switchPipeline(int pipeline){
@@ -50,14 +58,21 @@ public class LimeLightSubsystem {
     }
 
     public Pose3D get3dPose(){
-        if (!limeLight.getLatestResult().getFiducialResults().isEmpty()) {
-            return limeLight.getLatestResult().getFiducialResults().get(0).getTargetPoseCameraSpace();
+        LLResult data = limeLight.getLatestResult();
+        if(data == null || !data.isValid()){
+            return null;
+        }
+        if (!data.getFiducialResults().isEmpty()) {
+            return data.getFiducialResults().get(0).getTargetPoseCameraSpace();
         } else{
             return null;
         }
     }
     public double getDistancePose(){
         Pose3D pose = get3dPose();
+        if(pose == null){
+            return 0;
+        }
         double y = pose.getPosition().z * Math.cos(Math.toRadians(RobotConstants.LL_ANGLE)) + pose.getPosition().y * Math.sin(Math.toRadians(RobotConstants.LL_ANGLE));
         return Math.sqrt(Math.pow(pose.getPosition().x, 2) + Math.pow(y, 2));
     }
@@ -77,10 +92,18 @@ public class LimeLightSubsystem {
     }
 
     public double getDistanceTrig(){
-        return (RobotConstants.TAG_HEIGHT - RobotConstants.LL_HEIGHT)/(Math.tan(Math.toRadians(limeLight.getLatestResult().getTy() + RobotConstants.LL_ANGLE)));
+        LLResult data = limeLight.getLatestResult();
+        if(data == null || !data.isValid()){
+            return 0;
+        }
+        return (RobotConstants.TAG_HEIGHT - RobotConstants.LL_HEIGHT)/(Math.tan(Math.toRadians(data.getTy() + RobotConstants.LL_ANGLE)));
     }
 
     public double getOffsetAngle(){ //Angle from april tag to be looking at the centre of the goal (When not using POI)
+        LLResult data = limeLight.getLatestResult();
+        if(data == null || !data.isValid()){
+            return 0;
+        }
         double angle = getTagAngle();
         double direction;
         if (angle > 0){
@@ -90,6 +113,6 @@ public class LimeLightSubsystem {
         }
         angle = Math.abs(angle);
         double length = Math.sqrt(Math.pow(RobotConstants.TARGET_OFFSET, 2) + Math.pow(getDistanceTrig(), 2) - 2 * RobotConstants.TARGET_OFFSET * getDistanceTrig()*Math. cos(Math.toRadians(90 - angle + 90 + RobotConstants.NORMAL_ANGLE_OFFSET)));
-        return direction * Math.acos((Math.pow(getDistanceTrig(), 2) + Math.pow(length, 2) - Math.pow(RobotConstants.TARGET_OFFSET, 2))/(2 * getDistanceTrig() * length));
+        return direction * Math.acos(Math.max(-1, Math.min(1, (Math.pow(getDistanceTrig(), 2) + Math.pow(length, 2) - Math.pow(RobotConstants.TARGET_OFFSET, 2))/(2 * getDistanceTrig() * length))));
     }
 }

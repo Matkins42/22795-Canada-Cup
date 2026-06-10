@@ -11,17 +11,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Constants.RobotConstants;
 
 public class IntakeSubsystem {
+    private OuttakeSubsystem outtake;
     private DcMotor frontIntake;
     private DcMotor backIntake;
 
     private ElapsedTime timer = new ElapsedTime();
     private int shootingState = 1;
+    private double spacingTime;
 
-    public IntakeSubsystem(HardwareMap hardwareMap) {
+    public IntakeSubsystem(HardwareMap hardwareMap, OuttakeSubsystem outtakeSubsystem) {
         frontIntake = hardwareMap. get(DcMotor.class, "intakeFront");
         backIntake = hardwareMap. get(DcMotor.class, "intakeBack");
 
         frontIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        outtake = outtakeSubsystem;
     }
 
     public void stop(){
@@ -54,20 +58,32 @@ public class IntakeSubsystem {
     public void updateTimer(){
         if(shootingState == 1){
             if(timer.seconds() > RobotConstants.SHOOTING_STATE_1_TIME) {
-                if (RobotConstants.SHOOTING_STATE_2_TIME > 0) {
+                if (RobotConstants.SHOOTING_STATE_2_MIN_TIME > 0) {
                     shootingState = 2;
                 }
                 timer.reset();
             }
         } else if (shootingState == 2){
-            if(timer.seconds() > RobotConstants.SHOOTING_STATE_2_TIME) {
-                if (RobotConstants.SHOOTING_STATE_1_TIME > 0) {
-                    shootingState = 1;
+            if(RobotConstants.SET_SPACING_TIME){
+                if (timer.seconds() > spacingTime) {
+                    if (RobotConstants.SHOOTING_STATE_1_TIME > 0) {
+                        shootingState = 1;
+                    }
+                    timer.reset();
                 }
-                timer.reset();
+            } else {
+                if (timer.seconds() > RobotConstants.SHOOTING_STATE_2_MIN_TIME && outtake.reachedSpeed()) {
+                    if (RobotConstants.SHOOTING_STATE_1_TIME > 0) {
+                        shootingState = 1;
+                    }
+                    timer.reset();
+                }
             }
         }
+    }
 
+    public void setSpacingTime(double time){
+        spacingTime = time;
     }
 
 }
